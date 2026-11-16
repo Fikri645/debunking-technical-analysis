@@ -1,17 +1,14 @@
 # Thread Threads (maks. 500 karakter per post)
 
-Jawaban tebak chart: B.
 
 ---
-[1] gambar: 00_tebak_chart_asli.png
+[1] gambar: 01_tabel_lolos.png
 
 Technical analysis itu ramalan zodiak versi trader.
 
 Saya uji 210 strategi TA yang dijual di kelas-kelas trading: indikator, candlestick, pola chart, Fibonacci, supply-demand, SMC/ICT, Elliott Wave. Di 115 saham, forex, dan crypto, data 2010–2026.
 
 Hasilnya di bawah.
-
-Sambil baca: satu chart di gambar ini Bitcoin asli, tiga lainnya acak. Tebak yang mana. Jawabannya di post terakhir.
 ---
 [2] gambar: 02_untung_vs_terbukti.png
 
@@ -21,7 +18,7 @@ Kenapa bukan "backtest-nya untung"? Karena saya juga menguji zodiak sungguhan: f
 
 Pasar naik, semua terlihat pintar.
 ---
-[3] gambar: 01_tabel_lolos.png
+[3]
 
 Syarat lolos: mengalahkan entry acak DAN untung setelah biaya, di seluruh periode dan di 2022–2026.
 
@@ -76,5 +73,3 @@ Bukan saran investasi.
 
 Lihat tiap pola dan posisinya di chart: https://fikri645.github.io/debunking-technical-analysis/
 Kode dan hasil: https://github.com/Fikri645/debunking-technical-analysis
-
-Jawaban chart: B.

@@ -530,39 +530,10 @@ def findings(v: pd.DataFrame) -> dict:
     return dict(proof=proof, fib=fib, era=era, momentum=mom)
 
 
-QUIZ = [("crypto", "1d", "BTCUSDT"), ("us", "1d", "AAPL"), ("idx", "1d", "BBCA.JK"), ("forex", "1d", "EURUSD=X"),
-        ("crypto", "4h", "ETHUSDT"), ("us", "1d", "TSLA"), ("idx", "1d", "TLKM.JK"), ("forex", "1d", "GC=F"),
-        ("crypto", "1d", "SOLUSDT"), ("us", "1d", "NVDA")]
-
-
-def write_quiz() -> None:
-    """Kuis: satu chart asli, tiga hasil mengacak urutan candle dari jendela yang sama."""
-    rng = np.random.default_rng(2026)
-    rounds = []
-    for k, (market, tf, sym) in enumerate(QUIZ):
-        df = evaluate.load_cell(market, tf).get(sym)
-        if df is None or len(df) < 600:
-            continue
-        start = int(rng.integers(200, len(df) - 200))
-        real = df.iloc[start: start + 160]
-        answer = int(rng.integers(0, 4))
-        charts = []
-        for slot in range(4):
-            d = real if slot == answer else evaluate.permute_bars(real, seed=100 * k + slot)
-            base = float(d["open"].values[0])   # dinormalkan supaya tidak bisa ditebak dari angka harganya
-            charts.append({c: [round(float(x) / base * 100, 3) for x in d[col].values]
-                           for c, col in (("o", "open"), ("h", "high"), ("l", "low"), ("c", "close"))})
-        rounds.append(dict(sym=sym.replace("=X", "").replace(".JK", ""), tf=tf,
-                           period=f"{real.index[0]:%b %Y} – {real.index[-1]:%b %Y}", answer=answer, charts=charts))
-    (SITE / "quiz.json").write_text(json.dumps(rounds, separators=(",", ":")), encoding="utf-8")
-    print("kuis:", len(rounds), "ronde")
-
-
 def main() -> None:
     (SITE / "trades").mkdir(parents=True, exist_ok=True)
     reg = registry()
     write_index(reg)
-    write_quiz()
     if sys.argv[1:] == ["--index"]:
         return
     only = sys.argv[1:]

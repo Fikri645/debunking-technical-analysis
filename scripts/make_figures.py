@@ -182,40 +182,10 @@ def fig_momentum():
            "05_momentum_vs_indikator.png")
 
 
-def fig_hook():
-    cell = evaluate.load_cell("crypto", "1d")
-    real = cell["BTCUSDT"].iloc[-420:-180]
-    fig = plt.figure(figsize=(16, 9))
-    order = [1, 0, 2, 3]  # posisi panel; panel ke-2 (B) adalah data asli
-    letters = "ABCD"
-    for slot in range(4):
-        ax = fig.add_axes([0.04 + (slot % 2) * 0.48, 0.08 + (1 - slot // 2) * 0.36, 0.44, 0.32])
-        kind = order[slot]
-        # candle yang diacak berasal dari jendela yang sama, supaya volatilitasnya setara
-        df = real if kind == 0 else evaluate.permute_bars(real, seed=40 + kind)
-        o, h, l, c = (df[k].values for k in ("open", "high", "low", "close"))
-        xx = np.arange(len(df))
-        up = c >= o
-        ax.vlines(xx, l, h, color="#59636e", lw=0.7)
-        ax.bar(xx[up], (c - o)[up], bottom=o[up], width=0.7, color=GREEN)
-        ax.bar(xx[~up], (o - c)[~up], bottom=c[~up], width=0.7, color=RED)
-        ax.set_xticks([])
-        ax.set_yticks([])
-        for sp in ax.spines.values():
-            sp.set_visible(True)
-            sp.set_color(GRID)
-        ax.text(0.02, 0.93, letters[slot], transform=ax.transAxes, fontsize=24, fontweight="bold", va="top")
-    finish(fig, "Satu chart ini Bitcoin sungguhan. Tiga lainnya acak. Yang mana?",
-           "Tiga chart dibuat dengan mengacak urutan candle, jadi mustahil diramal. "
-           "Kalau Anda melihat support, tren, atau pola di semuanya, itu intinya.", "00_tebak_chart_asli.png")
-    print("jawaban chart asli:", letters[order.index(0)])
-
-
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     v = pd.read_csv(FINAL / "verdicts.csv")
     allt = pd.read_csv(FINAL / "all_tests.csv")
-    fig_hook()
     fig_matrix(v)
     fig_profit_vs_proof(v)
     fig_fib(v)

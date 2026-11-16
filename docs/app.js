@@ -20,7 +20,7 @@
 
   // ---------------------------------------------------------------- data
   async function loadTrades(id) {
-    if (!cache.has(id)) cache.set(id, fetch(`data/trades/${id}.json`).then((r) => (r.ok ? r.json() : {})));
+    if (!cache.has(id)) cache.set(id, fetch(`data/trades/${id}.json`).then((r) => (r.ok ? r.json() : { _error: true })).catch(() => ({ _error: true })));
     return cache.get(id);
   }
 
@@ -105,18 +105,20 @@
     renderStats();
     state.trades = await loadTrades(id);
     if (state.strategy !== s) return;
+    const failed = state.trades._error;
+    if (failed) { cache.delete(id); state.trades = {}; }
     const keys = Object.keys(state.trades);
     const want = keys.find((k) => market && k.startsWith(market + '_'));
     const passed = keys.find((k) => s.cells.some((c) => c.passes && `${c.market}_${c.tf}` === k));
-    renderCells(keys);
+    renderCells(keys, failed);
     selectCell(want || passed || keys[0]);
   }
 
-  function renderCells(keys) {
+  function renderCells(keys, failed) {
     $('s-cells').innerHTML = keys.map((k) => {
       const [m, tf] = k.split('_');
       return `<button type="button" role="tab" data-k="${k}">${INDEX.markets[m]}, ${TF[tf]}</button>`;
-    }).join('') || '<span class="note">Strategi ini tidak menghasilkan transaksi di pasar yang ditampilkan.</span>';
+    }).join('') || `<span class="note">${failed ? 'Data contoh transaksi gagal dimuat. Muat ulang halaman; kalau membuka secara lokal, pastikan server menayangkan folder docs.' : 'Strategi ini tidak menghasilkan transaksi di pasar yang ditampilkan.'}</span>`;
   }
 
   function selectCell(k) {

@@ -1,4 +1,4 @@
-// Kuis chart asli vs acak, grafik temuan, dan tabel semua hasil.
+// Grafik temuan dan tabel semua hasil.
 (() => {
   'use strict';
   const $ = (id) => document.getElementById(id);
@@ -25,65 +25,6 @@
     zodiak: 'Ini kontrol: ramalan zodiak sungguhan. Lebih dari separuhnya "untung" karena pasar cenderung naik, tetapi tidak satu pun mengalahkan entry acak.',
     kontrol_momentum: 'Ini kontrol: aturan satu kalimat tanpa indikator. Di crypto harian dan 4 jam hasilnya setara dengan 14 indikator tren.',
   };
-
-  // ---------------------------------------------------------------- kuis
-  const quiz = { rounds: [], i: 0, picked: -1, right: 0, total: 0 };
-
-  function drawMini(canvas, d, mark) {
-    const dpr = window.devicePixelRatio || 1, W = canvas.clientWidth, H = canvas.clientHeight;
-    canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
-    const ctx = canvas.getContext('2d');
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.clearRect(0, 0, W, H);
-    const n = d.c.length, lo = Math.min(...d.l), hi = Math.max(...d.h), pad = 10;
-    const bw = (W - 2 * pad) / n, Y = (p) => pad + (hi - p) / (hi - lo) * (H - 2 * pad);
-    for (let i = 0; i < n; i++) {
-      const up = d.c[i] >= d.o[i], x = Math.round(pad + (i + 0.5) * bw) + 0.5;
-      ctx.strokeStyle = ctx.fillStyle = up ? '#12806c' : '#cf4034';
-      ctx.beginPath(); ctx.moveTo(x, Y(d.h[i])); ctx.lineTo(x, Y(d.l[i])); ctx.stroke();
-      ctx.fillRect(x - Math.max(1, bw * 0.35), Y(Math.max(d.o[i], d.c[i])), Math.max(1.5, bw * 0.7), Math.max(1, Math.abs(Y(d.o[i]) - Y(d.c[i]))));
-    }
-    canvas.parentElement.dataset.mark = mark || '';
-  }
-
-  function renderQuiz() {
-    const r = quiz.rounds[quiz.i];
-    if (!r) return;
-    const grid = $('quiz-grid');
-    grid.innerHTML = r.charts.map((_, k) =>
-      `<button type="button" class="quiz-card" data-k="${k}" aria-label="Chart ${'ABCD'[k]}"><span>${'ABCD'[k]}</span><canvas></canvas></button>`).join('');
-    grid.querySelectorAll('canvas').forEach((c, k) => {
-      const mark = quiz.picked < 0 ? '' : k === r.answer ? 'asli' : k === quiz.picked ? 'salah' : 'acak';
-      drawMini(c, r.charts[k], mark);
-    });
-    const res = $('quiz-result');
-    if (quiz.picked < 0) { res.className = 'result'; res.textContent = ''; }
-    else {
-      const ok = quiz.picked === r.answer;
-      res.className = 'result ' + (ok ? 'win' : 'loss');
-      res.textContent = `${ok ? 'Benar.' : 'Meleset.'} Yang asli chart ${'ABCD'[r.answer]}: ${r.sym}, ${TF[r.tf]}, ${r.period}. ` +
-        'Tiga lainnya acak, tetapi tetap terlihat punya tren, support, dan pola.';
-    }
-    $('quiz-score').textContent = quiz.total
-      ? `Benar ${quiz.right} dari ${quiz.total}. Menebak asal-asalan rata-rata benar 1 dari 4.` : `Ronde ${quiz.i + 1} dari ${quiz.rounds.length}`;
-  }
-
-  $('quiz-grid').addEventListener('click', (ev) => {
-    const b = ev.target.closest('button');
-    if (!b || quiz.picked >= 0) return;
-    quiz.picked = +b.dataset.k;
-    quiz.total += 1;
-    if (quiz.picked === quiz.rounds[quiz.i].answer) quiz.right += 1;
-    renderQuiz();
-  });
-  $('quiz-next').addEventListener('click', () => {
-    quiz.i = (quiz.i + 1) % quiz.rounds.length;
-    quiz.picked = -1;
-    renderQuiz();
-  });
-  fetch('data/quiz.json').then((r) => r.json()).then((rounds) => { quiz.rounds = rounds; renderQuiz(); })
-    .catch(() => { $('quiz').hidden = true; });
-  window.addEventListener('resize', renderQuiz);
 
   // ---------------------------------------------------------------- temuan
   function bars(rows, max, unit) {
