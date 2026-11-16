@@ -6,7 +6,7 @@
 
 Technical analysis itu ramalan zodiak versi trader.
 
-Saya uji 210 strategi TA yang dijual di kelas-kelas trading: indikator, candlestick, pola chart, Fibonacci, supply-demand, SMC/ICT, Elliott Wave. Di 115 saham, forex, dan crypto, data 2010–2026.
+Saya uji 232 strategi TA yang dijual di kelas-kelas trading: indikator, candlestick, pola chart, Fibonacci, supply-demand, SMC/ICT, Elliott Wave. Di 115 saham, forex, dan crypto, data 2010–2026.
 
 Hasilnya di bawah.
 ---
@@ -20,47 +20,55 @@ Pasar naik, semua terlihat pintar.
 ---
 [3]
 
-Syarat lolos: mengalahkan entry acak DAN untung setelah biaya, di seluruh periode dan di 2022–2026.
+Syarat lolos: mengalahkan entry acak, untung setelah biaya, dan bekerja di mayoritas instrumen, di seluruh periode dan di 2022–2026.
 
-Saham Indonesia, saham AS, forex, emas: 1 dari 1.233 kombinasi lolos. Satu itu pun cuma 57 transaksi, hampir pasti kebetulan.
+Saham Indonesia, saham AS, forex, emas: 0 dari 1.347 kombinasi lolos.
 
-Nol di semua pasar:
-• Pola candlestick: 0 dari 390
+Nol di semua pasar, termasuk crypto:
+• Pola candlestick: 0 dari 490
 • Support/resistance: 0 dari 60
 • Supply & demand: 0 dari 60
-• SMC/ICT (order block, FVG, liquidity sweep): 0 dari 126
+• SMC/ICT (order block, FVG, liquidity sweep): 0 dari 146
 ---
 [4] gambar: 03_fibonacci_vs_angka_asal.png
 
 Fibonacci: 0 dari 80.
 
-Level "sakral" 38,2 / 50 / 61,8 / 78,6% saya adu dengan angka karangan sendiri: 30 / 44 / 56 / 70 / 85%. Hasilnya tidak bisa dibedakan.
+Level "sakral" 38,2 / 50 / 61,8 / 78,6% saya adu dengan angka karangan sendiri: 30 / 44 / 56 / 70 / 85%. Hasilnya tidak bisa dibedakan. Satu angka karangan malah lolos di crypto; Fibonacci asli tidak ada.
 
 Elliott Wave: dari 20.443 sinyal, 33,7% punya hitungan gelombang lain yang sama sahnya tapi arahnya berlawanan, dalam jarak 10 candle. Ramalan yang selalu bisa dibaca dua arah itu horoskop.
 ---
-[5]
+[5] gambar: 06_beli_lalu_diamkan.png
 
-"Beli saat oversold" (RSI di bawah 30, Stochastic, Bollinger bawah) di crypto malah lebih buruk dari entry acak. Di saham, dari 34 strategi indikator tidak satu pun mengalahkan beli-lalu-diamkan.
+Lalu semuanya diadu dengan beli lalu diamkan.
+
+Saham AS: 0 dari 419 kombinasi strategi yang hasil akhirnya lebih baik. Saham Indonesia harian: 0 dari 206.
+
+Catatan jujur: di forex dan data 1 jam saham Indonesia, 221 kombinasi "menang". Tapi cuma 42 yang untung; sisanya menang karena harganya turun di periode itu dan strateginya rugi lebih sedikit.
+---
+[6]
+
+"Beli saat oversold" (RSI di bawah 30, Stochastic di bawah 20) di crypto 15 menit sampai 4 jam malah lebih buruk dari entry acak.
 
 Strategi lengkap ala kursus juga diuji: sweep + Stochastic, pullback MA50, head and shoulders dengan target Fibonacci, model ICT 2022. Hasilnya 0 dari 80.
 
 Saya tidak sebut nama. Yang diuji metodenya, bukan orangnya.
 ---
-[6] gambar: 05_momentum_vs_indikator.png
+[7] gambar: 05_momentum_vs_indikator.png
 
-Bagian yang jujur: ada yang lolos. Di crypto, 30 dari 833 kombinasi lolos, semuanya satu jenis: ikut tren dan breakout (EMA, golden cross, Ichimoku, Donchian, tembus trendline).
+Bagian yang jujur: ada yang lolos. Di crypto, 23 dari 915 kombinasi lolos, hampir semuanya satu jenis: ikut tren dan breakout (EMA, golden cross, Ichimoku, Donchian, tembus trendline). 13 di antaranya juga mengalahkan beli-lalu-diamkan.
 
 Jadi TA terbukti? Saya buat aturan satu kalimat tanpa indikator: "kalau harga lebih tinggi dari N candle lalu, beli; kalau tidak, keluar." Hasilnya setara dengan 14 indikator tren.
 
-Yang bekerja momentumnya. Indikator cuma momentum yang dihaluskan.
+Yang bekerja momentumnya, bukan indikatornya.
 ---
-[7] gambar: 04_keunggulan_menyusut.png
+[8] gambar: 04_keunggulan_menyusut.png
 
 Bentuk pola juga tidak menambah apa-apa: "masuk saat harga menembus swing terakhir", tanpa syarat bentuk, ikut lolos di crypto 4 jam.
 
-Dan momentum crypto itu menipis. Keunggulannya atas entry acak turun sekitar 65% dari 2018–2021 ke 2022–2026. Di 15 menit sudah habis dimakan biaya. Drawdown-nya tetap 60–90%.
+Dan momentum crypto itu menipis. Keunggulannya atas entry acak turun sekitar 60% dari 2018–2021 ke 2022–2026. Di 15 menit sudah habis dimakan biaya: tidak ada satu pun yang lolos.
 ---
-[8]
+[9]
 
 Kesimpulan:
 

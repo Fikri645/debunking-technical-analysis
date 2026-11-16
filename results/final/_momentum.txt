@@ -1,0 +1,109 @@
+Keunggulan atas entry acak (edge = mean_rg - null_mean_rg), per sel:
+                                strategi  lolos  kalahkan_acak  edge_median  edge_maks  edge_C_median  z_median  net_median
+market tf  sisi jenis                                                                                                      
+crypto 15m lo   indikator tren        14      0              4       0.0683     0.7796         0.0651    3.4187     -0.0017
+                momentum polos         5      0              2       0.0525     0.1884         0.0337    3.3159     -0.0017
+           ls   indikator tren        14      0              3       0.0432     0.7375         0.0470    2.9761     -0.0021
+                momentum polos         5      0              2       0.0375     0.1692         0.0211    3.0424     -0.0020
+       1d  lo   indikator tren        14      4              4       1.6190     3.6921         0.6955    3.8595      0.1395
+                momentum polos         5      1              1       1.1675     2.4190         0.2989    2.7164      0.1094
+           ls   indikator tren        14      2              2       1.2065     6.3335         0.5629    3.5463      0.0676
+                momentum polos         5      0              0       1.0233     2.0821         0.2613    2.6244      0.0536
+       1h  lo   indikator tren        14      1              6       0.2159     1.8417         0.1597    5.0318      0.0008
+                momentum polos         5      0              4       0.1733     0.3684         0.1322    6.2714      0.0002
+           ls   indikator tren        14      0              5       0.1847     1.5685         0.1282    4.7303     -0.0007
+                momentum polos         5      0              4       0.1563     0.3008         0.1230    5.3495     -0.0009
+       4h  lo   indikator tren        14      7             10       0.5095     4.8237         0.3789    5.3159      0.0127
+                momentum polos         5      1              4       0.3540     1.4180         0.2541    5.6896      0.0088
+           ls   indikator tren        14      3              5       0.4334     4.0243         0.2968    4.8317      0.0053
+                momentum polos         5      1              2       0.2956     1.0342         0.1938    5.1988      0.0035
+forex  1d  lo   indikator tren        13      0              0       0.0078     0.0442        -0.0114    0.1126      0.0013
+                momentum polos         5      0              0      -0.0088     0.0198        -0.0004   -0.2323      0.0006
+           ls   indikator tren        13      0              0       0.0038     0.0959        -0.0323    0.0543     -0.0003
+                momentum polos         5      0              0      -0.0101     0.0114        -0.0683   -0.2404     -0.0004
+       1h  lo   indikator tren        13      0              0       0.0557     0.0916         0.0557    0.7653      0.0001
+                momentum polos         5      0              0       0.0244     0.0267         0.0244    0.3387     -0.0000
+           ls   indikator tren        13      0              0       0.0515     0.0805         0.0515    0.7657     -0.0001
+                momentum polos         5      0              0       0.0196     0.0342         0.0196    0.3631     -0.0001
+idx    1d  lo   indikator tren        14      0              0       0.4579    19.3140         0.1757    1.4193      0.0240
+                momentum polos         5      0              0       0.2891     4.6587        -0.0091    1.5911      0.0165
+           ls   indikator tren        14      0              0       0.2404    10.4869        -0.1321    0.7295      0.0055
+                momentum polos         5      0              0       0.1675     2.4166        -0.0833    0.9182      0.0027
+       1h  lo   indikator tren        14      0              3       0.1326     0.3405         0.1326    1.8651     -0.0035
+                momentum polos         5      0              1       0.0782     0.1317         0.0782    1.1064     -0.0039
+           ls   indikator tren        14      0              3       0.1341     0.4011         0.1341    2.1990     -0.0028
+                momentum polos         5      0              1       0.0779     0.1557         0.0779    1.2417     -0.0036
+us     1d  lo   indikator tren        14      0              0      -0.0746     0.2432         0.0186   -0.9005      0.0149
+                momentum polos         5      0              0      -0.0417    -0.0208         0.0335   -0.7473      0.0135
+           ls   indikator tren        14      0              0      -0.1082    -0.0154        -0.0099   -0.9266      0.0003
+                momentum polos         5      0              0      -0.0743    -0.0202         0.0352   -0.7402      0.0005
+       1h  lo   indikator tren        14      0              0      -0.0049     0.0598        -0.0049   -0.0633      0.0016
+                momentum polos         5      0              0       0.0057     0.0224         0.0057    0.1601      0.0013
+           ls   indikator tren        14      0              0      -0.0100     0.0654        -0.0100   -0.1080     -0.0007
+                momentum polos         5      0              0       0.0021     0.0155         0.0021    0.0604     -0.0008
+
+Momentum polos di crypto, rinci:
+             strategy  tf      n  win_rate  mean_net    edge       p  edge_C     p_C  passes
+momentum_polos_100_lo 15m  79918   0.18380  -0.00173 0.05247 0.00430 0.03373 0.12544   False
+momentum_polos_100_ls 15m 159777   0.18389  -0.00211 0.03746 0.02715 0.02108 0.23229   False
+ momentum_polos_10_lo 15m 266898   0.20869  -0.00197 0.00488 0.15185 0.00773 0.14386   False
+ momentum_polos_10_ls 15m 533506   0.20707  -0.00209 0.00381 0.22577 0.00752 0.15385   False
+momentum_polos_200_lo 15m  56332   0.19399  -0.00086 0.18838 0.00005 0.14552 0.00075   False
+momentum_polos_200_ls 15m 112717   0.19538  -0.00143 0.16920 0.00005 0.13405 0.00160   False
+ momentum_polos_20_lo 15m 189581   0.20177  -0.00189 0.02397 0.00090 0.01917 0.03915   False
+ momentum_polos_20_ls 15m 379180   0.20115  -0.00205 0.02180 0.00175 0.01791 0.04895   False
+ momentum_polos_50_lo 15m 117203   0.19907  -0.00149 0.08716 0.00005 0.06257 0.00070   False
+ momentum_polos_50_ls 15m 234343   0.19864  -0.00177 0.07349 0.00005 0.05299 0.00335   False
+momentum_polos_100_lo  1d    659   0.28832   0.18976 1.16749 0.11089 0.37275 0.14685   False
+momentum_polos_100_ls  1d   1318   0.29970   0.08521 1.27078 0.10889 0.33673 0.15784   False
+ momentum_polos_10_lo  1d   2577   0.32635   0.02729 0.26990 0.00005 0.16338 0.01300   False
+ momentum_polos_10_ls  1d   5159   0.33320   0.01199 0.23582 0.00005 0.12798 0.04455   False
+momentum_polos_200_lo  1d    523   0.30784   0.38300 2.41898 0.25574 0.01036 0.38561   False
+momentum_polos_200_ls  1d   1045   0.30239   0.18398 2.08210 0.25375 0.11596 0.32567   False
+ momentum_polos_20_lo  1d   1699   0.32254   0.05430 0.56135 0.00005 0.29894 0.00690    True
+ momentum_polos_20_ls  1d   3407   0.33050   0.02644 0.47383 0.00005 0.26135 0.01815   False
+ momentum_polos_50_lo  1d   1037   0.32112   0.10943 1.33416 0.02897 0.42006 0.03197   False
+ momentum_polos_50_ls  1d   2082   0.33814   0.05358 1.02330 0.02198 0.35755 0.04695   False
+momentum_polos_100_lo  1h  19283   0.24426   0.00135 0.25912 0.00005 0.18898 0.00070   False
+momentum_polos_100_ls  1h  38549   0.24444  -0.00043 0.21893 0.00005 0.15729 0.00490   False
+ momentum_polos_10_lo  1h  64775   0.25817  -0.00133 0.04416 0.00005 0.03504 0.01330   False
+ momentum_polos_10_ls  1h 129602   0.25695  -0.00183 0.03938 0.00005 0.03324 0.01735   False
+momentum_polos_200_lo  1h  13302   0.24831   0.00341 0.36843 0.00005 0.29255 0.00195   False
+momentum_polos_200_ls  1h  26617   0.24518   0.00069 0.30078 0.00005 0.21909 0.00600   False
+ momentum_polos_20_lo  1h  44439   0.25786  -0.00026 0.12786 0.00005 0.10518 0.00005   False
+ momentum_polos_20_ls  1h  88896   0.25859  -0.00095 0.11868 0.00005 0.09680 0.00005   False
+ momentum_polos_50_lo  1h  27868   0.24304   0.00020 0.17334 0.00005 0.13223 0.00110   False
+ momentum_polos_50_ls  1h  55759   0.24620  -0.00094 0.15630 0.00005 0.12296 0.00180   False
+momentum_polos_100_lo  4h   4507   0.28001   0.01795 0.52813 0.00005 0.29874 0.01050   False
+momentum_polos_100_ls  4h   9013   0.28115   0.00828 0.46545 0.00005 0.27372 0.01450   False
+ momentum_polos_10_lo  4h  15812   0.29522   0.00124 0.10585 0.00005 0.08671 0.00440   False
+ momentum_polos_10_ls  4h  31638   0.29910  -0.00072 0.09871 0.00005 0.07800 0.00810   False
+momentum_polos_200_lo  4h   3107   0.29836   0.03768 1.41798 0.00520 0.66031 0.00005    True
+momentum_polos_200_ls  4h   6217   0.29998   0.01946 1.03418 0.00430 0.53812 0.00005    True
+ momentum_polos_20_lo  4h  10707   0.29308   0.00416 0.20098 0.00005 0.14017 0.00255   False
+ momentum_polos_20_ls  4h  21413   0.29417   0.00101 0.17955 0.00005 0.12099 0.00765   False
+ momentum_polos_50_lo  4h   6719   0.28873   0.00878 0.35403 0.00005 0.25409 0.00155   False
+ momentum_polos_50_ls  4h  13451   0.28920   0.00347 0.29558 0.00005 0.19385 0.00685   False
+
+Sharpe per instrumen (median antar-strategi dalam tiap jenis, lalu median antar-instrumen):
+market  tf sisi  instrumen  sharpe_indikator  sharpe_momentum  sharpe_buyhold  indikator_lebih_baik  p_wilcoxon  terbaik_indikator  terbaik_momentum
+crypto 15m   lo         12            -2.038           -2.570           0.677                    12       0.000              0.640            -0.679
+crypto 15m   ls         12            -3.308           -4.065           0.677                    12       0.000              0.167            -1.707
+crypto  1d   lo         12             0.745            0.756           0.669                     7       0.380              1.026             0.958
+crypto  1d   ls         12             0.465            0.536           0.669                     6       0.970              0.834             0.677
+crypto  1h   lo         12             0.164            0.048           0.675                    10       0.016              0.825             0.479
+crypto  1h   ls         12            -0.420           -0.643           0.675                    10       0.016              0.473             0.013
+crypto  4h   lo         12             0.669            0.713           0.667                     7       0.569              1.014             1.015
+crypto  4h   ls         12             0.346            0.300           0.667                     7       0.470              0.847             0.696
+ forex  1d   lo          9            -0.082           -0.083          -0.080                     4       0.820              0.031             0.140
+ forex  1d   ls          9            -0.058           -0.091          -0.080                     5       0.734              0.162             0.022
+ forex  1h   lo          9            -0.364           -0.397           0.243                     6       0.055              0.242             0.025
+ forex  1h   ls          9            -0.686           -0.781           0.243                     7       0.020              0.006            -0.012
+   idx  1d   lo         43             0.166            0.119           0.415                    30       0.000              0.465             0.304
+   idx  1d   ls         43            -0.141           -0.198           0.415                    33       0.000              0.276             0.110
+   idx  1h   lo         43            -0.463           -0.853          -0.083                    38       0.000              0.173            -0.344
+   idx  1h   ls         43            -0.554           -1.046          -0.083                    39       0.000              0.276            -0.337
+    us  1d   lo         51             0.394            0.389           0.687                    20       0.013              0.623             0.556
+    us  1d   ls         51            -0.077           -0.069           0.687                    22       0.163              0.271             0.212
+    us  1h   lo         51             0.218            0.160           0.751                    30       0.149              0.859             0.635
+    us  1h   ls         51            -0.301           -0.435           0.751                    33       0.021              0.487             0.227

@@ -75,7 +75,7 @@ def fig_matrix(v):
         s.set_visible(False)
     tot = ta.groupby(ta.market == "crypto").passes.agg(["sum", "size"])
     finish(fig, "Berapa strategi technical analysis yang benar-benar terbukti?",
-           f"Lolos = mengalahkan entry acak DAN untung setelah biaya, di seluruh periode dan di 2022–2026.  "
+           f"Lolos = mengalahkan entry acak, untung setelah biaya, dan bekerja di mayoritas instrumen; di seluruh periode dan di 2022–2026.  "
            f"Di luar crypto: {int(tot.loc[False, 'sum'])} dari {int(tot.loc[False, 'size']):,}.".replace(",", "."),
            "01_tabel_lolos.png")
 
@@ -185,20 +185,27 @@ def fig_momentum():
 def fig_buyhold(v):
     t = v[~v.control & v.instrumen.notna()]
     fig = plt.figure(figsize=(16, 9))
-    ax = fig.add_axes([0.22, 0.14, 0.72, 0.58])
+    ax = fig.add_axes([0.2, 0.14, 0.5, 0.56])
     rows = [(lab.replace("\n", " "), t[t.market == m]) for m, lab in MARKETS]
     y = np.arange(len(rows))
-    share = [100 * d.beats_bh.mean() for _, d in rows]
+    win = [100 * d.beats_bh.mean() for _, d in rows]
+    real = [100 * (d.beats_bh & (d.cagr > 0)).mean() for _, d in rows]
     ax.barh(y, [100] * len(rows), 0.55, color="#eef1f6")
-    ax.barh(y, share, 0.55, color=BLUE)
+    ax.barh(y, win, 0.55, color=GREY, label="Menang, tetapi tetap rugi (hanya rugi lebih sedikit)")
+    ax.barh(y, real, 0.55, color=BLUE, label="Menang dan untung")
     for i, (lab, d) in enumerate(rows):
-        ax.text(101.5, i, f"{int(d.beats_bh.sum())} dari {len(d):,}".replace(",", "."), va="center", fontsize=17,
+        n_win, n_real = int(d.beats_bh.sum()), int((d.beats_bh & (d.cagr > 0)).sum())
+        ax.text(102, i - 0.1, f"{n_win} dari {len(d):,} menang".replace(",", "."), va="center", fontsize=17,
                 fontweight="bold")
+        ax.text(102, i + 0.17, f"{n_real} di antaranya untung", va="center", fontsize=13, color=MUTED)
     ax.set_yticks(y, [r[0] for r in rows], fontsize=17)
     ax.invert_yaxis()
-    ax.set_xlim(0, 125)
+    ax.set_xlim(0, 100)
     ax.set_xticks([0, 25, 50, 75, 100], ["0%", "25%", "50%", "75%", "100%"])
     ax.set_xlabel("Kombinasi strategi yang hasil akhirnya mengalahkan beli lalu diamkan")
+    ax.legend(frameon=False, loc="upper center", ncol=2, fontsize=13, bbox_to_anchor=(0.5, 1.13))
+    for sp in ("top", "right"):
+        ax.spines[sp].set_visible(False)
     total = 100 * (1 - t.beats_bh.mean())
     finish(fig, f"Beli lalu diamkan mengalahkan {total:.0f}% strategi technical analysis",
            "Modal yang menjalankan strategi terus-menerus dibanding modal yang membeli instrumen yang sama di awal data lalu "

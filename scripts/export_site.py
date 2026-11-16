@@ -638,6 +638,7 @@ def findings(v: pd.DataFrame) -> dict:
                 momentum=round(r.sharpe_momentum, 2)) for r in s.itertuples()]
     t = v[~v.control & v.instrumen.notna()]
     bh = [dict(label=MARKET_LABEL[m], total=int(len(d)), menang=int(d.beats_bh.sum()),
+               untung=int((d.beats_bh & (d.cagr > 0)).sum()),
                cagr=round(100 * float(d.cagr.median()), 1), bh=round(100 * float(d.bh_cagr.median()), 1))
           for m, d in ((m, t[t.market == m]) for m in MARKET_LABEL)]
     return dict(proof=proof, fib=fib, era=era, momentum=mom, buyhold=bh)

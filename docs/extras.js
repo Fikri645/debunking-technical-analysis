@@ -9,14 +9,14 @@
 
   // Catatan temuan per kelompok, ditampilkan di bawah aturan strategi
   window.TA_GROUP_NOTES = {
-    indikator: 'Temuan kelompok ini: yang lolos hanya indikator ikut-tren di crypto. "Beli saat oversold" (RSI, Stochastic, Bollinger bawah) di crypto malah lebih buruk dari entry acak, dan di saham tidak ada yang mengalahkan beli-lalu-diamkan.',
+    indikator: 'Temuan kelompok ini: yang lolos hanya indikator ikut-tren di crypto. "Beli saat oversold" (RSI, Stochastic, Bollinger bawah) di crypto malah lebih buruk dari entry acak, dan di saham AS maupun data harian saham Indonesia tidak satu pun mengalahkan beli-lalu-diamkan.',
     candlestick: 'Temuan kelompok ini: dari 13 pola candlestick dengan tiga cara keluar, tidak satu pun lolos di pasar mana pun.',
     pola_chart_B: 'Temuan kelompok ini: yang lolos hanya sinyal breakout di crypto. Kontrol "tembus swing terakhir tanpa syarat bentuk" juga lolos di sana, jadi bentuk polanya tidak menambah apa-apa.',
     pola_chart_A: 'Temuan kelompok ini: definisi pola dari riset Lo, Mamaysky & Wang (2000) tidak lolos di pasar mana pun.',
     support_resistance: 'Temuan kelompok ini: pantulan, breakout, maupun retest di level horizontal tidak lolos di pasar mana pun.',
     trendline: 'Temuan kelompok ini: pantulan di garis tren tidak lolos. Tembus garis tren lolos di crypto saja, dan itu sinyal ikut-arah, sama seperti momentum.',
     fibonacci: 'Temuan kelompok ini: tidak ada level Fibonacci yang lolos, dan hasilnya tidak bisa dibedakan dari level karangan 30 / 44 / 56 / 70 / 85%.',
-    fibonacci_palsu: 'Ini kontrol: level retracement karangan yang tidak ada hubungannya dengan deret Fibonacci. Hasilnya setara dengan level Fibonacci asli.',
+    fibonacci_palsu: 'Ini kontrol: level retracement karangan yang tidak ada hubungannya dengan deret Fibonacci. Hasilnya setara dengan level Fibonacci asli; satu level karangan (30%) malah lolos di crypto 1 jam, sedangkan level asli tidak ada yang lolos.',
     supply_demand: 'Temuan kelompok ini: zona supply dan demand tidak lolos di pasar mana pun, termasuk zona "kuat".',
     smc_ict: 'Temuan kelompok ini: BOS, CHoCH, liquidity sweep, fair value gap, order block, dan model ICT 2022 tidak lolos di pasar mana pun.',
     elliott: 'Temuan kelompok ini: hanya "kejar wave 3" di crypto 4 jam yang lolos, dan itu entry searah gerakan terakhir. Sepertiga sinyal Elliott punya hitungan lain yang sama sahnya tetapi berlawanan arah dalam 10 candle.',
@@ -75,8 +75,8 @@
     if (f.buyhold) {
       const tot = f.buyhold.reduce((a, b) => a + b.total, 0), win = f.buyhold.reduce((a, b) => a + b.menang, 0);
       cards.unshift([`Beli lalu diamkan mengalahkan ${nf(100 * (1 - win / tot), 0)}% strategi`,
-        'Persen kombinasi strategi yang hasil akhirnya lebih tinggi dari membeli instrumen yang sama di awal data lalu mendiamkannya, di lebih dari separuh instrumennya. Keduanya setelah biaya. Di forex, beli lalu diamkan sendiri nyaris nol.',
-        bars(f.buyhold.map((b) => ({ label: `${b.label}: ${b.menang} dari ${nf(b.total, 0)}`, value: 100 * b.menang / b.total,
+        'Persen kombinasi strategi yang hasil akhirnya lebih tinggi dari membeli instrumen yang sama di awal data lalu mendiamkannya, di lebih dari separuh instrumennya. Keduanya setelah biaya. Di saham Indonesia dan forex sebagian besar yang menang tetap rugi: harganya turun pada periode itu dan strateginya hanya rugi lebih sedikit.',
+        bars(f.buyhold.map((b) => ({ label: `${b.label}: ${b.menang} dari ${nf(b.total, 0)}, ${b.untung} untung`, value: 100 * b.menang / b.total,
           color: BLUE, text: nf(100 * b.menang / b.total, 0) + '%' })), 100, '%')]);
     }
     $('findings').innerHTML = cards.map(([h, p, body]) => `<article><h3>${esc(h)}</h3><p>${esc(p)}</p>${body}</article>`).join('');

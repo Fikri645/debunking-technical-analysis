@@ -68,7 +68,7 @@
     const tt = INDEX.totals;
     $('headline-result').textContent =
       `Hasilnya: di saham dan forex ${tt.non_crypto[0]} dari ${nf(tt.non_crypto[1], 0)} kombinasi lolos. ` +
-      `Di crypto ${tt.crypto[0]} dari ${nf(tt.crypto[1], 0)}, semuanya ikut-tren, dan aturan satu kalimat tanpa indikator hasilnya setara.`;
+      `Di crypto ${tt.crypto[0]} dari ${nf(tt.crypto[1], 0)}, hampir semuanya ikut-tren atau breakout, dan aturan satu kalimat tanpa indikator hasilnya setara.`;
     $('lede-count').textContent = nf(tt.strategies, 0);
   }
 

@@ -7,7 +7,7 @@ Di X tiap link dihitung 23 karakter, jadi post terakhir tetap muat.
 
 Technical analysis itu ramalan zodiak versi trader.
 
-Saya uji 210 strategi TA yang dijual di kelas-kelas trading, di 115 saham, forex, dan crypto, data 2010–2026.
+Saya uji 232 strategi TA yang dijual di kelas-kelas trading, di 115 saham, forex, dan crypto, data 2010–2026.
 
 Hasilnya 🧵
 ---
@@ -31,20 +31,20 @@ Pasar naik, semua terlihat pintar.
 ---
 [4]
 
-Syarat lolos: mengalahkan entry acak DAN untung setelah biaya, di seluruh periode dan di 2022–2026.
+Syarat lolos: mengalahkan entry acak, untung setelah biaya, dan bekerja di mayoritas instrumen. Di seluruh periode dan di 2022–2026.
 
-Saham Indonesia, saham AS, forex, emas: 1 dari 1.233 kombinasi lolos.
+Saham Indonesia, saham AS, forex, emas: 0 dari 1.347 kombinasi lolos.
 
-Satu itu pun cuma 57 transaksi. Hampir pasti kebetulan.
+Nol.
 ---
 [5]
 
-Yang lolos NOL di semua pasar:
+Yang lolos NOL di semua pasar, termasuk crypto:
 
-• Pola candlestick (hammer, engulfing, doji…): 0 dari 390
+• Pola candlestick (hammer, engulfing, doji…): 0 dari 490
 • Support/resistance: 0 dari 60
 • Supply & demand: 0 dari 60
-• SMC/ICT, order block, FVG, liquidity sweep: 0 dari 126
+• SMC/ICT, order block, FVG, liquidity sweep: 0 dari 146
 ---
 [6] gambar: 03_fibonacci_vs_angka_asal.png
 
@@ -52,7 +52,7 @@ Fibonacci: 0 dari 80.
 
 Level "sakral" 38,2 / 50 / 61,8 / 78,6% saya adu dengan angka karangan sendiri: 30 / 44 / 56 / 70 / 85%.
 
-Hasilnya tidak bisa dibedakan. Golden ratio tidak tahu harga saham Anda.
+Hasilnya tidak bisa dibedakan. Satu angka karangan malah lolos di crypto. Fibonacci asli tidak ada.
 ---
 [7]
 
@@ -60,13 +60,27 @@ Elliott Wave: dari 20.443 sinyal, 33,7% punya hitungan gelombang lain yang sama 
 
 Ramalan yang selalu bisa dibaca dua arah itu bukan ramalan. Itu horoskop.
 ---
-[8]
+[8] gambar: 06_beli_lalu_diamkan.png
 
-"Beli saat oversold" (RSI di bawah 30, Stochastic, Bollinger bawah) di crypto malah LEBIH BURUK dari entry acak.
+Lalu semuanya diadu dengan beli lalu diamkan.
 
-Di saham: dari 34 strategi indikator, tidak satu pun mengalahkan beli-lalu-diamkan.
+Saham AS: 0 dari 419 kombinasi strategi yang hasil akhirnya lebih baik. Saham Indonesia harian: 0 dari 206.
+
+Sibuk trading bertahun-tahun, kalah dari yang beli lalu tidur.
 ---
 [9]
+
+Catatan jujur: di forex dan data 1 jam saham Indonesia, 221 kombinasi "menang" dari beli-lalu-diamkan.
+
+Tapi cuma 42 yang untung. Sisanya menang karena harganya turun di periode itu dan strateginya rugi lebih sedikit.
+---
+[10]
+
+"Beli saat oversold" (RSI di bawah 30, Stochastic di bawah 20) di crypto 15 menit sampai 4 jam malah LEBIH BURUK dari entry acak.
+
+Bukan sekadar tidak berguna. Merugikan.
+---
+[11]
 
 Strategi lengkap ala kursus juga diuji: sweep + Stochastic, pullback MA50, head and shoulders dengan target Fibonacci, model ICT 2022.
 
@@ -74,15 +88,17 @@ Strategi lengkap ala kursus juga diuji: sweep + Stochastic, pullback MA50, head 
 
 Saya tidak sebut nama. Yang diuji metodenya, bukan orangnya.
 ---
-[10]
+[12]
 
 Bagian yang jujur: ada yang lolos.
 
-Di crypto, 30 dari 833 kombinasi lolos. Semuanya satu jenis: ikut tren dan breakout. EMA, golden cross, Ichimoku, Donchian, tembus trendline.
+Di crypto, 23 dari 915 kombinasi lolos. Hampir semuanya satu jenis: ikut tren dan breakout. EMA, golden cross, Ichimoku, Donchian, tembus trendline.
+
+13 di antaranya juga mengalahkan beli-lalu-diamkan.
 
 Jadi TA terbukti? Tunggu dulu.
 ---
-[11] gambar: 05_momentum_vs_indikator.png
+[13] gambar: 05_momentum_vs_indikator.png
 
 Saya buat aturan satu kalimat, tanpa indikator:
 
@@ -92,7 +108,7 @@ Hasilnya setara dengan 14 indikator tren.
 
 Yang bekerja momentumnya. Indikator cuma momentum yang dihaluskan.
 ---
-[12]
+[14]
 
 Bentuk pola juga tidak menambah apa-apa.
 
@@ -100,15 +116,13 @@ Bentuk pola juga tidak menambah apa-apa.
 
 Triangle, flag, wedge: tidak perlu dihafal.
 ---
-[13] gambar: 04_keunggulan_menyusut.png
+[15] gambar: 04_keunggulan_menyusut.png
 
 Momentum crypto itu pun menipis.
 
-Keunggulannya atas entry acak turun sekitar 65% dari 2018–2021 ke 2022–2026. Di 15 menit sudah habis dimakan biaya.
-
-Drawdown-nya tetap 60–90%.
+Keunggulannya atas entry acak turun sekitar 60% dari 2018–2021 ke 2022–2026. Di 15 menit sudah habis dimakan biaya: tidak ada satu pun yang lolos.
 ---
-[14]
+[16]
 
 Kesimpulan:
 
@@ -117,7 +131,7 @@ Kesimpulan:
 
 Yang dijual di kelas trading adalah bagian zodiaknya.
 ---
-[15]
+[17]
 
 Bukan saran investasi. Yang diuji aturan yang bisa ditulis jadi kode, bukan "feeling" trader.
 
