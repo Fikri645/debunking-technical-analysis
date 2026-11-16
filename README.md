@@ -22,6 +22,7 @@ Di website Anda bisa melihat tiap pola, zona, dan level yang diuji langsung di c
 - Yang lolos di crypto hampir semuanya ikut-tren atau breakout. Aturan satu kalimat tanpa indikator ("long kalau harga lebih tinggi dari N candle lalu") hasilnya setara dengan 14 indikator tren, dan "tembus swing terakhir tanpa syarat bentuk" ikut lolos seperti pola chart.
 - Beli-lalu-diamkan: di saham AS dan di data harian saham Indonesia tidak ada satu pun strategi yang menang. Di data 1 jam saham Indonesia dan di forex, sebagian strategi "menang" karena harga turun pada periode itu dan strategi rugi lebih sedikit. Di crypto, 28 kombinasi menang, hampir semuanya indikator ikut-tren di timeframe harian dan 4 jam.
 - Keunggulan ikut-tren di crypto 4 jam turun sekitar 60% dari 2018–2021 ke 2022–2026.
+- Strategi yang lolos di crypto tetap mengalami penurunan modal yang dalam: median 79% dari puncak per koin (beli-lalu-diamkan 93%); lihat `scripts/drawdown.py`.
 - Kontrol zodiak sungguhan (fase bulan, Merkurius retrograde, elemen zodiak): 57% kombinasinya "untung", tidak satu pun mengalahkan entry acak.
 
 Metode lengkap, kriteria, dan semua koreksi selama pengerjaan: [METODE.md](METODE.md).

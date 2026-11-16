@@ -383,6 +383,57 @@ def _match_points(det: pd.DataFrame, sig: int, d: int):
             if f"pi{q}" in row and row[f"pi{q}"] >= 0]
 
 
+def pattern_shapes(pat: str, pts, d: int, sig: int, df: pd.DataFrame) -> list[dict]:
+    """Gambar pola seperti di buku: garis leher, dua garis tren, tiang dan bendera, cangkir dan gagang.
+    `pts` adalah titik swing yang dipakai detektor; garisnya dihitung dengan rumus detektor yang sama."""
+    P = [(int(i), float(p)) for i, p in pts]
+    side = [1 if P[q][1] > P[q - 1 if q else 1][1] else -1 for q in range(len(P))]   # +1 puncak, -1 lembah
+    lab = lambda q, text: [text, side[q]]
+    h, l, c = (df[k].values.astype(float) for k in ("high", "low", "close"))
+    if pat == "head_shoulders":
+        (i1, t1), (i2, t2) = P[2], P[4]
+        slope = (t2 - t1) / (i2 - i1)
+        return [dict(k="poly", pts=P, lead=1,
+                     labels=[None, lab(1, "bahu kiri"), None, lab(3, "kepala"), None, lab(5, "bahu kanan")]),
+                dict(k="line", i0=i1, p0=t1, i1=sig, p1=t2 + slope * (sig - i2), label="garis leher", dash=True)]
+    if pat == "double_top_bottom":
+        w = "puncak" if d == -1 else "dasar"
+        return [dict(k="poly", pts=P, lead=1, labels=[None, lab(1, f"{w} 1"), None, lab(3, f"{w} 2")]),
+                dict(k="hline", p=P[2][1], i0=P[1][0], i1=sig, label="garis leher")]
+    if pat == "triple_top_bottom":
+        w = "puncak" if d == -1 else "dasar"
+        lvl = min(P[2][1], P[4][1]) if d == -1 else max(P[2][1], P[4][1])
+        return [dict(k="poly", pts=P, lead=1,
+                     labels=[None, lab(1, f"{w} 1"), None, lab(3, f"{w} 2"), None, lab(5, f"{w} 3")]),
+                dict(k="hline", p=lvl, i0=P[1][0], i1=sig, label="support" if d == -1 else "resistance")]
+    if pat in ("triangle_asc_desc", "triangle_symmetrical", "rectangle", "wedge"):
+        last = list(range(len(P) - 4, len(P)))
+        out = [dict(k="dots", pts=P)]
+        for s, text in ((1, "garis atas"), (-1, "garis bawah")):
+            (ia, pa), (ib, pb) = [P[q] for q in last if side[q] == s]
+            slope = (pb - pa) / (ib - ia)
+            i0 = P[0][0]
+            out.append(dict(k="line", i0=i0, p0=pb + slope * (i0 - ib), i1=sig, p1=pb + slope * (sig - ib), label=text))
+        return out
+    if pat == "flag_pennant":
+        (ia, a), (ib, b) = P[0], P[1]
+        ext = l[ib + 1: sig + 1].min() if d == 1 else h[ib + 1: sig + 1].max()
+        return [dict(k="line", i0=ia, p0=a, i1=ib, p1=b, label="tiang"),
+                dict(k="zone", i0=ib, i1=sig, lo=min(ext, b), hi=max(ext, b), tag="bendera")]
+    if pat == "cup_handle":
+        (i1, p1), (it1, t1), (i2, p2) = P[1], P[2], P[3]
+        w = max(2, (i2 - i1) // 8)
+        step = max(1, (i2 - i1) // 50)
+        curve = [(i1, p1)] + [(j, float(c[max(i1, j - w): min(i2, j + w) + 1].mean()))
+                              for j in range(i1 + step, i2, step)] + [(i2, p2)]
+        ext = l[i2 + 1: sig + 1].min() if d == 1 else h[i2 + 1: sig + 1].max()
+        return [dict(k="poly", pts=curve, dots=False),
+                dict(k="dots", pts=[P[2]], labels=[["dasar cangkir", side[2]]]),
+                dict(k="hline", p=p2, i0=i1, i1=sig, label="bibir cangkir"),
+                dict(k="zone", i0=i2, i1=sig, lo=min(ext, p2), hi=max(ext, p2), tag="gagang")]
+    return [dict(k="poly", pts=P)]
+
+
 def _zone(res, entry: int, d: int, label: str):
     e_idx, _, dirs, _, _, z0, zlo, zhi = res
     hit = np.flatnonzero((e_idx == entry) & (dirs == d))
@@ -424,14 +475,14 @@ def geometry(name: str, base: str, group: str, df: pd.DataFrame, tr) -> list[dic
         t = patterns.TOL_NAMES.index(tol)
         det = strat_patterns._memo(df, ("det", pat, t), lambda: patterns.detect(df, pat, t))
         pts = _match_points(det, sig, d)
-        return [dict(k="poly", pts=pts, label="pola")] if pts else []
+        return pattern_shapes(pat, pts, d, sig, df) if pts else []
     if base in ("triangle_fib1272", "triangle_fib1272_mtf", "hs_fib1272", "hs_fib1618"):
         names = ("head_shoulders",) if base.startswith("hs") else ("triangle_asc_desc", "triangle_symmetrical", "flag_pennant")
         for pat in names:
             det = strat_patterns._memo(df, ("det", pat, 1), lambda p=pat: patterns.detect(df, p, 1))
             pts = _match_points(det, sig, d)
             if pts:
-                return [dict(k="poly", pts=pts, label=BASE[pat][0])]
+                return pattern_shapes(pat, pts, d, sig, df)
         return []
     if group == "elliott":
         p = name.split("_")
@@ -620,7 +671,8 @@ def findings(v: pd.DataFrame) -> dict:
     for g in ("zodiak", "candlestick", "fibonacci", "smc_ict", "supply_demand", "support_resistance"):
         d = v[v.group == g]
         proof.append(dict(label=GROUP_LABEL[g].replace("Kontrol: ", ""), untung=round(100 * d.profitable.mean(), 1),
-                          bukti=round(100 * d.beats_random.mean(), 1)))
+                          bukti=round(100 * d.beats_random.mean(), 1), n=int(len(d)),
+                          n_untung=int(d.profitable.sum()), n_bukti=int(d.beats_random.sum())))
     f = v[v.group.isin(["fibonacci", "fibonacci_palsu"])].copy()
     f["level"] = f.strategy.str.extract(r"_(\d{3})")[0].astype(int) / 10
     fib = [dict(level=float(lv), fake=grp == "fibonacci_palsu", z=round(float(d.z.mean()), 2))

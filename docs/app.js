@@ -384,19 +384,32 @@
     // bentuk
     ctx.lineWidth = 2; ctx.strokeStyle = C.mark; ctx.fillStyle = C.mark;
     for (const s of t.shapes) {
-      if (s.k === 'poly') {
-        ctx.beginPath();
-        s.pts.forEach((p, q) => (q ? ctx.lineTo(X(p[0]), Y(p[1])) : ctx.moveTo(X(p[0]), Y(p[1]))));
-        ctx.stroke();
+      if (s.k === 'poly' || s.k === 'dots') {
+        const lead = s.lead || 0;   // ruas awal = tren sebelum pola, digambar tipis
+        if (s.k === 'poly') {
+          if (lead) {
+            ctx.save(); ctx.globalAlpha = 0.45; ctx.setLineDash([4, 4]); ctx.lineWidth = 1.4; ctx.beginPath();
+            for (let q = 0; q <= lead; q++) (q ? ctx.lineTo(X(s.pts[q][0]), Y(s.pts[q][1])) : ctx.moveTo(X(s.pts[q][0]), Y(s.pts[q][1])));
+            ctx.stroke(); ctx.restore();
+          }
+          ctx.beginPath();
+          for (let q = lead; q < s.pts.length; q++) (q > lead ? ctx.lineTo(X(s.pts[q][0]), Y(s.pts[q][1])) : ctx.moveTo(X(s.pts[q][0]), Y(s.pts[q][1])));
+          ctx.stroke();
+        }
         s.pts.forEach((p, q) => {
-          ctx.beginPath(); ctx.arc(X(p[0]), Y(p[1]), 3.5, 0, 6.3); ctx.fill();
+          if (s.dots !== false && q >= lead) { ctx.beginPath(); ctx.arc(X(p[0]), Y(p[1]), 3.5, 0, 6.3); ctx.fill(); }
           if (s.numbered) { ctx.textAlign = 'center'; ctx.fillText(String(q), X(p[0]), Y(p[1]) + (q % 2 ? -12 : 13)); }
+          const lb = s.labels && s.labels[q];
+          if (lb) label(lb[0], X(p[0]), Y(p[1]) - lb[1] * 15, C.mark, 'center', true);
         });
+      } else if (s.k === 'zone' && s.tag) {
+        label(s.tag, X(s.i0) + 4, Y(s.lo) + 12, C.mark, 'left', true);
       } else if (s.k === 'hline') {
         dash(X(s.i0) - bw / 2, Y(s.p), X(lastX(s.i1)) + bw / 2, Y(s.p), C.mark, [6, 4], 1.6);
         label(s.label, X(s.i0), Y(s.p) - 9, C.mark, 'left');
       } else if (s.k === 'line') {
-        ctx.beginPath(); ctx.moveTo(X(s.i0), Y(s.p0)); ctx.lineTo(X(s.i1), Y(s.p1)); ctx.stroke();
+        ctx.save(); if (s.dash) ctx.setLineDash([6, 4]);
+        ctx.beginPath(); ctx.moveTo(X(s.i0), Y(s.p0)); ctx.lineTo(X(s.i1), Y(s.p1)); ctx.stroke(); ctx.restore();
         label(s.label, X(s.i0), Y(s.p0) + (s.p1 > s.p0 ? 12 : -12), C.mark, 'left');
       } else if (s.k === 'fib') {
         ctx.beginPath(); ctx.moveTo(X(s.ia), Y(s.a)); ctx.lineTo(X(s.ib), Y(s.b)); ctx.stroke();

@@ -120,7 +120,9 @@ Triangle, flag, wedge: tidak perlu dihafal.
 
 Momentum crypto itu pun menipis.
 
-Keunggulannya atas entry acak turun sekitar 60% dari 2018–2021 ke 2022–2026. Di 15 menit sudah habis dimakan biaya: tidak ada satu pun yang lolos.
+Keunggulannya atas entry acak turun sekitar 60% dari 2018–2021 ke 2022–2026. Di 15 menit habis dimakan biaya: tidak ada yang lolos.
+
+Dan modalnya tetap sempat anjlok dalam: median 79% (beli-lalu-diamkan 93%).
 ---
 [16]
 

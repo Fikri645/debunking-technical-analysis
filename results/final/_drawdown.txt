@@ -1,0 +1,6 @@
+Strategi lolos di crypto yang punya data posisi: 17 dari 23
+Pasangan strategi x koin: 204
+Drawdown terdalam strategi: median -78.7%, 80% pasangan di antara -59.3% dan -95.3%
+Lebih dalam dari -50%: 96.1% pasangan
+Beli-lalu-diamkan pada pasangan yang sama: median -93.3%
+Drawdown strategi lebih dangkal dari beli-lalu-diamkan: 81.4% pasangan

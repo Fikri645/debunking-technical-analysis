@@ -144,6 +144,8 @@ select, input[type=search] {
 .findings h3 { font-size: 1.25rem; }
 .findings p { color: var(--muted); font-size: .95rem; margin: 0 0 14px; }
 .bar-row { display: grid; grid-template-columns: minmax(0, 15em) minmax(0, 1fr) 4.2em; gap: 10px; align-items: center; font-size: .9rem; padding: 3px 0; }
+.bar-head { font-weight: 700; font-size: .92rem; margin-top: 10px; }
+.bar-head:first-child { margin-top: 0; }
 .bar-label { overflow-wrap: anywhere; line-height: 1.25; }
 .bar-track { position: relative; height: 14px; background: #f0f3f9; border-radius: 3px; }
 .bar-track.mid::before { content: ""; position: absolute; left: 50%; top: -3px; bottom: -3px; width: 1px; background: var(--ink); }

@@ -89,21 +89,24 @@ def fig_profit_vs_proof(v):
     y = np.arange(len(rows))
     untung = [100 * v[v.group == g].profitable.mean() for g, _ in rows]
     bukti = [100 * v[v.group == g].beats_random.mean() for g, _ in rows]
-    ax.barh(y - 0.19, untung, 0.36, color=GREY, label='"Untung" di backtest')
-    ax.barh(y + 0.19, bukti, 0.36, color=BLUE, label="Mengalahkan entry acak")
-    for i, (u, b) in enumerate(zip(untung, bukti)):
-        ax.text(u + 0.8, i - 0.19, f"{u:.0f}%", va="center", fontsize=14, color=MUTED)
-        ax.text(b + 0.8, i + 0.19, f"{b:.0f}%", va="center", fontsize=14, color=BLUE, fontweight="bold")
+    ax.barh(y - 0.19, untung, 0.36, color=GREY, label="Backtest-nya untung")
+    ax.barh(y + 0.19, bukti, 0.36, color=BLUE, label="Lebih baik dari entry acak")
+    for i, (g, _) in enumerate(rows):
+        d = v[v.group == g]
+        ax.text(untung[i] + 0.8, i - 0.19, f"{int(d.profitable.sum())} dari {len(d)} uji", va="center",
+                fontsize=14, color=MUTED)
+        ax.text(bukti[i] + 0.8, i + 0.19, f"{int(d.beats_random.sum())} dari {len(d)} uji", va="center",
+                fontsize=14, color=BLUE, fontweight="bold")
     ax.set_yticks(y, [r[1] for r in rows])
     ax.invert_yaxis()
-    ax.set_xlim(0, max(untung) * 1.15)
-    ax.set_xlabel("% kombinasi strategi × pasar × timeframe")
+    ax.set_xlim(0, max(untung) * 1.28)
+    ax.set_xlabel("% dari semua uji (satu uji = satu aturan di satu pasar dan timeframe)")
     ax.xaxis.grid(True, color=GRID)
     ax.set_axisbelow(True)
     ax.legend(frameon=False, loc="lower right", fontsize=14)
     finish(fig, '"Backtest saya untung" tidak membuktikan apa-apa',
-           "Ramalan zodiak pun sering \"untung\", karena pasar memang cenderung naik. "
-           "Yang penting: apakah lebih baik dari entry acak?", "02_untung_vs_terbukti.png")
+           "Ramalan zodiak sungguhan paling sering untung, tetapi tidak pernah lebih baik dari masuk pasar di waktu acak: "
+           "untungnya datang dari pasar yang naik. Untung saja bukan bukti.", "02_untung_vs_terbukti.png")
 
 
 def fig_fib(v):

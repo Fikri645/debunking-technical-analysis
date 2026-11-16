@@ -11,7 +11,7 @@
   window.TA_GROUP_NOTES = {
     indikator: 'Temuan kelompok ini: yang lolos hanya indikator ikut-tren di crypto. "Beli saat oversold" (RSI, Stochastic, Bollinger bawah) di crypto malah lebih buruk dari entry acak, dan di saham AS maupun data harian saham Indonesia tidak satu pun mengalahkan beli-lalu-diamkan.',
     candlestick: 'Temuan kelompok ini: dari 13 pola candlestick dengan tiga cara keluar, tidak satu pun lolos di pasar mana pun.',
-    pola_chart_B: 'Temuan kelompok ini: yang lolos hanya sinyal breakout di crypto. Kontrol "tembus swing terakhir tanpa syarat bentuk" juga lolos di sana, jadi bentuk polanya tidak menambah apa-apa.',
+    pola_chart_B: 'Temuan kelompok ini: yang lolos hanya sinyal breakout di crypto. Kontrol "tembus swing terakhir tanpa syarat bentuk" juga lolos di sana, jadi bentuk polanya tidak menambah apa-apa. Tiap pola diuji dengan tiga tingkat toleransi: "ketat" adalah bentuk buku teks, "sedang" dan "longgar" sengaja menerima bentuk yang kurang rapi, supaya hasilnya tidak bergantung pada satu definisi.',
     pola_chart_A: 'Temuan kelompok ini: definisi pola dari riset Lo, Mamaysky & Wang (2000) tidak lolos di pasar mana pun.',
     support_resistance: 'Temuan kelompok ini: pantulan, breakout, maupun retest di level horizontal tidak lolos di pasar mana pun.',
     trendline: 'Temuan kelompok ini: pantulan di garis tren tidak lolos. Tembus garis tren lolos di crypto saja, dan itu sinyal ikut-arah, sama seperti momentum.',
@@ -28,7 +28,7 @@
 
   // ---------------------------------------------------------------- temuan
   function bars(rows, max, unit) {
-    return '<div class="bars">' + rows.map((r) =>
+    return '<div class="bars">' + rows.map((r) => r.head ? `<div class="bar-head">${esc(r.head)}</div>` :
       `<div class="bar-row"><span class="bar-label">${esc(r.label)}</span>` +
       `<span class="bar-track"><span class="bar" style="width:${Math.max(0.5, 100 * r.value / max)}%;background:${r.color}"></span></span>` +
       `<span class="bar-value">${r.text || nf(r.value, unit === '%' ? 0 : 2) + (unit || '')}</span></div>`).join('') + '</div>';
@@ -47,9 +47,11 @@
     const GREY = '#aab3c5', BLUE = '#2f6fb0', AMBER = '#d98a12', RED = '#cf4034';
     const proofRows = [];
     for (const p of f.proof) {
-      proofRows.push({ label: p.label + ': "untung"', value: p.untung, color: GREY, text: nf(p.untung, 0) + '%' });
-      proofRows.push({ label: p.label + ': kalahkan acak', value: p.bukti, color: BLUE, text: nf(p.bukti, 0) + '%' });
+      proofRows.push({ head: `${p.label[0].toUpperCase() + p.label.slice(1)} (${nf(p.n, 0)} uji)` });
+      proofRows.push({ label: 'Backtest-nya untung', value: p.untung, color: GREY, text: `${p.n_untung} uji` });
+      proofRows.push({ label: 'Lebih baik dari entry acak', value: p.bukti, color: BLUE, text: `${p.n_bukti} uji` });
     }
+    const z = f.proof[0];
     const drop = Math.round(100 * (1 - f.era[1].edge / f.era[0].edge));
     const mom = [];
     for (const m of f.momentum) {
@@ -60,7 +62,7 @@
     }
     const cards = [
       ['"Backtest saya untung" tidak membuktikan apa-apa',
-        'Persen kombinasi yang "untung" dibanding yang mengalahkan entry acak. Ramalan zodiak sungguhan paling sering "untung", karena pasar memang cenderung naik.',
+        `Cara baca: ramalan zodiak sungguhan diuji ${z.n} kali (tiap aturan di tiap pasar). ${z.n_untung} di antaranya backtest-nya untung, tetapi ${z.n_bukti === 0 ? 'tidak satu pun' : z.n_bukti} yang hasilnya lebih baik dari masuk pasar di waktu acak. Untungnya datang dari pasar yang naik, bukan dari ramalannya. Jadi untung saja bukan bukti; metode TA di bawahnya dinilai dengan ukuran yang sama.`,
         bars(proofRows, Math.max(...f.proof.map((p) => p.untung)), '%')],
       ['Level Fibonacci setara dengan angka karangan',
         'Keunggulan atas entry acak (skor z, rata-rata semua pasar). Di atas +1,96 baru berarti; tidak ada yang sampai. Kuning: level Fibonacci. Abu-abu: level karangan.',

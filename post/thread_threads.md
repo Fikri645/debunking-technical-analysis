@@ -67,6 +67,8 @@ Yang bekerja momentumnya, bukan indikatornya.
 Bentuk pola juga tidak menambah apa-apa: "masuk saat harga menembus swing terakhir", tanpa syarat bentuk, ikut lolos di crypto 4 jam.
 
 Dan momentum crypto itu menipis. Keunggulannya atas entry acak turun sekitar 60% dari 2018–2021 ke 2022–2026. Di 15 menit sudah habis dimakan biaya: tidak ada satu pun yang lolos.
+
+Modalnya juga tetap sempat anjlok dalam: median 79% dari puncak (beli-lalu-diamkan 93%).
 ---
 [9]
 
