@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Technical analysis vs entry acak: lihat sendiri tiap pola dan posisinya</title>
+<meta name="description" content="210 strategi technical analysis diuji melawan entry acak di saham, forex, dan crypto. Lihat pola, zona, dan posisi yang diuji langsung di chart.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="masthead">
+  <div class="wrap">
+    <h1>Technical analysis diadu dengan entry acak</h1>
+    <p class="lede">210 strategi yang diajarkan di kelas trading, dari RSI sampai order block, diuji di 115 saham, pasangan forex, dan koin, data 2010–2026. Tiap strategi harus mengalahkan entry acak yang arah, SL, TP, dan lama pegangnya sama persis, lalu tetap untung setelah biaya.</p>
+    <p class="lede" id="headline-result"></p>
+  </div>
+</header>
+
+<main class="wrap">
+  <section aria-labelledby="h-quiz" id="quiz">
+    <h2 id="h-quiz">Mulai dari sini: mana chart yang asli?</h2>
+    <p class="note">Satu dari empat chart ini harga sungguhan. Tiga lainnya dibuat dengan mengacak urutan candle yang sama, jadi mustahil diramal. Pilih yang menurut Anda asli.</p>
+    <div class="quiz-grid" id="quiz-grid"></div>
+    <div class="controls">
+      <button id="quiz-next" type="button" class="primary">Ronde berikutnya</button>
+      <span id="quiz-score" class="count"></span>
+    </div>
+    <p id="quiz-result" class="result" aria-live="polite"></p>
+  </section>
+
+  <section aria-labelledby="h-matrix">
+    <h2 id="h-matrix">Berapa yang lolos</h2>
+    <p class="note">Angka di tiap kotak: kombinasi yang lolos dari jumlah yang diuji. Pilih kotak untuk melihat strateginya di chart.</p>
+    <div class="matrix-scroll"><table class="matrix" id="matrix"></table></div>
+  </section>
+
+  <section aria-labelledby="h-findings">
+    <h2 id="h-findings">Empat temuan</h2>
+    <div class="findings" id="findings"></div>
+  </section>
+
+  <section aria-labelledby="h-explorer" id="explorer">
+    <h2 id="h-explorer">Lihat sendiri di chart</h2>
+    <p class="note">Contoh transaksi diambil secara acak, bukan dipilih yang bagus. Chart berhenti di candle entry, seperti yang dilihat trader saat itu. Tebak dulu untung atau rugi, lalu lihat candle berikutnya diputar.</p>
+    <div class="explorer">
+      <aside class="picker" aria-label="Daftar strategi">
+        <label class="field"><span>Kelompok</span><select id="f-group"></select></label>
+        <label class="field"><span>Cari strategi</span><input id="f-search" type="search" placeholder="mis. engulfing, fibonacci"></label>
+        <label class="check"><input id="f-pass" type="checkbox"> Hanya yang lolos</label>
+        <ul id="strategy-list" class="strategy-list"></ul>
+      </aside>
+
+      <div class="stage">
+        <h3 id="s-title"></h3>
+        <p id="s-rule" class="rule"></p>
+        <p id="s-group" class="group-note"></p>
+        <div class="cells" id="s-cells" role="tablist" aria-label="Pasar"></div>
+        <p id="s-verdict" class="verdict"></p>
+        <div id="bell" class="bell"></div>
+
+        <div class="chart-head">
+          <div id="t-title" class="t-title"></div>
+          <div class="legend" id="legend"></div>
+        </div>
+        <div class="chart-box">
+          <canvas id="chart" role="img" aria-label="Chart candlestick dengan pola dan posisi yang diuji"></canvas>
+          <div id="readout" class="readout" aria-hidden="true"></div>
+        </div>
+        <div class="controls">
+          <button id="btn-up" class="primary" type="button">Tebak: untung</button>
+          <button id="btn-down" class="primary" type="button">Tebak: rugi</button>
+          <button id="btn-reveal" type="button">Tampilkan saja</button>
+          <button id="btn-replay" type="button">Putar ulang</button>
+          <span id="t-score" class="count"></span>
+        </div>
+        <div class="controls">
+          <button id="btn-prev" type="button">Contoh sebelumnya</button>
+          <span id="t-chips" class="chips"></span>
+          <button id="btn-next" type="button">Contoh berikutnya</button>
+          <span id="t-count" class="count"></span>
+        </div>
+        <p id="t-result" class="result" aria-live="polite"></p>
+
+        <h4>Hasil strategi ini di semua pasar</h4>
+        <div class="matrix-scroll"><table class="stats" id="s-stats"></table></div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-all">
+    <h2 id="h-all">Semua hasil uji</h2>
+    <p class="note">Setiap baris satu strategi di satu pasar. Pilih judul kolom untuk mengurutkan, pilih baris untuk membukanya di chart.</p>
+    <div class="table-filters">
+      <label class="field"><span>Pasar</span><select id="a-market"></select></label>
+      <label class="field"><span>Kelompok</span><select id="a-group"></select></label>
+      <label class="field"><span>Kesimpulan</span><select id="a-verdict">
+        <option value="">Semua</option><option>Lolos</option><option>kalah oleh biaya</option>
+        <option>untung, setara acak</option><option>setara acak</option></select></label>
+      <span id="a-count" class="count"></span>
+    </div>
+    <div class="matrix-scroll"><table class="stats sortable" id="a-table"></table></div>
+    <div class="controls"><button id="a-more" type="button">Tampilkan 50 baris lagi</button></div>
+  </section>
+
+  <section aria-labelledby="h-method" class="method">
+    <h2 id="h-method">Cara membacanya</h2>
+    <dl>
+      <dt>Entry acak</dt>
+      <dd>Semua transaksi strategi digeser ke waktu acak, 1.000 sampai 20.000 kali, dengan arah, jarak SL/TP, dan lama pegang yang sama. Kalau hasil strategi tidak menonjol dari ribuan versi acak itu, sinyalnya tidak meramal apa-apa.</dd>
+      <dt>Lolos</dt>
+      <dd>Mengalahkan entry acak dan untung setelah biaya, di seluruh periode dan di 2022–2026, setelah koreksi untuk banyaknya uji yang dijalankan.</dd>
+      <dt>Kenapa untung saja tidak cukup</dt>
+      <dd>Strategi berdasarkan fase bulan dan Merkurius retrograde pun “untung” di lebih dari separuh pasar, karena harga memang cenderung naik. Tidak satu pun mengalahkan entry acak.</dd>
+      <dt>Batasan</dt>
+      <dd>Yang diuji adalah aturan yang bisa ditulis jadi kode, dengan parameter standar. Ini bukan saran investasi.</dd>
+    </dl>
+  </section>
+</main>
+
+<footer class="wrap foot">
+  <p>Data harga: Yahoo Finance dan Binance. <a href="https://github.com/Fikri645/debunking-technical-analysis">Kode dan semua hasil uji</a> terbuka untuk diperiksa.</p>
+</footer>
+<script src="extras.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

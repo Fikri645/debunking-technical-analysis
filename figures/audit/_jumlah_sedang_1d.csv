@@ -1,0 +1,10 @@
+pola,toleransi,tf,deteksi,per_1000_candle,bullish
+head_shoulders,sedang,1d,534,1.18,230
+double_top_bottom,sedang,1d,2378,5.28,1184
+triple_top_bottom,sedang,1d,307,0.68,158
+triangle_asc_desc,sedang,1d,411,0.91,230
+triangle_symmetrical,sedang,1d,100,0.22,45
+rectangle,sedang,1d,727,1.61,398
+wedge,sedang,1d,505,1.12,218
+flag_pennant,sedang,1d,735,1.63,404
+cup_handle,sedang,1d,246,0.55,141

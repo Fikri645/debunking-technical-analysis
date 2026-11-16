@@ -1,0 +1,10 @@
+pola,toleransi,tf,deteksi,per_1000_candle,bullish
+head_shoulders,ketat,1d,96,0.21,42
+double_top_bottom,ketat,1d,635,1.41,320
+triple_top_bottom,ketat,1d,24,0.05,13
+triangle_asc_desc,ketat,1d,66,0.15,35
+triangle_symmetrical,ketat,1d,2,0.0,0
+rectangle,ketat,1d,166,0.37,83
+wedge,ketat,1d,58,0.13,24
+flag_pennant,ketat,1d,48,0.11,31
+cup_handle,ketat,1d,19,0.04,11

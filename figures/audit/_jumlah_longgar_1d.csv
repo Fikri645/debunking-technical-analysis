@@ -1,0 +1,10 @@
+pola,toleransi,tf,deteksi,per_1000_candle,bullish
+head_shoulders,longgar,1d,1969,4.37,932
+double_top_bottom,longgar,1d,6639,14.73,3362
+triple_top_bottom,longgar,1d,1712,3.8,883
+triangle_asc_desc,longgar,1d,4104,9.11,2307
+triangle_symmetrical,longgar,1d,2341,5.19,1182
+rectangle,longgar,1d,6097,13.53,3411
+wedge,longgar,1d,3095,6.87,1405
+flag_pennant,longgar,1d,3229,7.16,1900
+cup_handle,longgar,1d,969,2.15,515

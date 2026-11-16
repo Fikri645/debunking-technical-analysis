@@ -1,0 +1,106 @@
+Total uji statistik: 6941 | strategi TA: 6045 | kontrol: 896
+Strategi TA unik: 210 | kombinasi strategi x pasar x timeframe: 2066
+
+Lolos semua kriteria / jumlah kombinasi:
+                               Kelompok Saham Indonesia Saham AS Forex & emas   Crypto
+                              Indikator         0 / 102  0 / 102       0 / 92 21 / 206
+                       Pola candlestick          0 / 78   0 / 78       0 / 78  0 / 156
+             Pola chart (definisi kita)         1 / 108  0 / 106      0 / 102  5 / 212
+              Pola chart (Lo dkk. 2000)          0 / 20   0 / 20       0 / 20   0 / 40
+                     Support/resistance          0 / 12   0 / 12       0 / 12   0 / 24
+                              Trendline           0 / 4    0 / 4        0 / 4    2 / 8
+                              Fibonacci          0 / 16   0 / 16       0 / 16   0 / 32
+                        Supply & demand          0 / 12   0 / 12       0 / 12   0 / 24
+                              SMC / ICT          0 / 25   0 / 25       0 / 25   0 / 51
+                           Elliott Wave          0 / 24   0 / 24       0 / 24   2 / 48
+        Strategi lengkap ala influencer          0 / 16   0 / 16       0 / 16   0 / 32
+       Kontrol: tembus swing tanpa pola           0 / 4    0 / 4        0 / 4    1 / 8
+               Kontrol: Fibonacci palsu          0 / 20   0 / 20       0 / 20   1 / 40
+              Kontrol: zodiak sungguhan          0 / 12   0 / 12       0 / 12   0 / 24
+Kontrol: momentum polos tanpa indikator          0 / 20   0 / 20       0 / 20   3 / 40
+
+Total strategi TA per pasar:
+        kombinasi  untung  kalahkan_acak  lolos
+market                                         
+crypto        833     169             67     30
+forex         401     107              0      0
+idx           417      49             18      1
+us            415      91              3      0
+Total: {'kombinasi': 2066, 'untung': 416, 'kalahkan_acak': 88, 'lolos': 31}
+
+Sebaran nilai p per kelompok (semua era):
+                     uji  p_di_bawah_005  p_di_atas_095  median
+group                                                          
+candlestick         1241           0.080          0.159   0.601
+elliott              345           0.107          0.046   0.420
+fibonacci            258           0.054          0.143   0.521
+fibonacci_palsu      320           0.062          0.138   0.534
+indikator           1640           0.275          0.090   0.374
+influencer           238           0.126          0.038   0.442
+kontrol               66           0.364          0.000   0.158
+kontrol_momentum     330           0.382          0.009   0.143
+pola_chart_A         321           0.056          0.100   0.479
+pola_chart_B        1182           0.255          0.021   0.229
+smc_ict              409           0.156          0.054   0.416
+supply_demand        151           0.205          0.007   0.219
+support_resistance   194           0.149          0.046   0.429
+trendline             66           0.136          0.121   0.532
+zodiak               180           0.033          0.022   0.402
+
+Di luar crypto (strategi TA): 3284 uji, 8.8% di bawah 0,05, 51 lolos FDR global
+
+LOLOS (36):
+           group                      strategy market tf     n  win_rate  mean_net  null_mean_net       p  mean_net_C     p_C
+       indikator         bollinger_breakout_lo crypto 1d   635   0.40787   0.11075        0.02561 0.00005     0.03435 0.00005
+       indikator                   ema_9_21_lo crypto 1d   694   0.31844   0.18009        0.04537 0.00105     0.02578 0.00145
+       indikator                   ema_9_21_ls crypto 1d  1394   0.33142   0.09286       -0.00244 0.00140     0.01571 0.00325
+       indikator                   ichimoku_lo crypto 1d   712   0.31461   0.10177        0.02728 0.00070     0.02835 0.00375
+       indikator                  obv_ema20_lo crypto 1d  2768   0.24205   0.02793        0.00974 0.00005     0.00550 0.00080
+       indikator                  obv_ema20_ls crypto 1d  5541   0.25050   0.01151       -0.00041 0.00005     0.00275 0.00240
+       indikator           volume_breakout_h10 crypto 1d   644   0.49845   0.03778        0.00122 0.00005     0.01613 0.00225
+       trendline               trendline_break crypto 1d   799   0.47434   0.02765       -0.00064 0.00005     0.03209 0.00005
+ fibonacci_palsu                   fibfake_300 crypto 1h  3158   0.65358   0.00328       -0.00246 0.00005     0.00170 0.00290
+       indikator        golden_cross_50_200_lo crypto 1h  2625   0.33562   0.02596        0.00807 0.00005     0.00716 0.00295
+    pola_chart_B          rectangle_sedang_h10 crypto 1h   927   0.47033   0.00292       -0.00200 0.00015     0.00162 0.00170
+    pola_chart_B triangle_asc_desc_longgar_h10 crypto 1h  5975   0.46142   0.00125       -0.00197 0.00005     0.00016 0.00005
+         elliott      elliott_wave3_aturan_h10 crypto 4h  4476   0.46783   0.00116       -0.00204 0.00025     0.00137 0.00140
+         elliott         elliott_wave3_fib_h10 crypto 4h  2940   0.47857   0.00204       -0.00195 0.00010     0.00382 0.00005
+       indikator                  adx_di_25_lo crypto 4h  3447   0.33130   0.01010        0.00134 0.00005     0.00212 0.00245
+       indikator         bollinger_breakout_lo crypto 4h  3754   0.35109   0.01140        0.00161 0.00005     0.00179 0.00165
+       indikator         bollinger_breakout_ls crypto 4h  7527   0.34981   0.00509       -0.00197 0.00005     0.00121 0.00275
+       indikator confluence_ema200_macd_rsi_lo crypto 4h  6034   0.27875   0.00636       -0.00013 0.00005     0.00146 0.00015
+       indikator confluence_ema200_macd_rsi_ls crypto 4h 12440   0.27227   0.00238       -0.00196 0.00005     0.00055 0.00150
+       indikator             donchian_20_10_lo crypto 4h  2863   0.36081   0.01544        0.00490 0.00005     0.00218 0.00315
+       indikator                   ema_9_21_lo crypto 4h  4568   0.28481   0.01406        0.00362 0.00005     0.00242 0.00110
+       indikator        golden_cross_50_200_lo crypto 4h   607   0.37232   0.19132        0.05450 0.00095     0.03788 0.00335
+       indikator                   ichimoku_lo crypto 4h  4695   0.29116   0.01107        0.00158 0.00005     0.00351 0.00005
+       indikator                   ichimoku_ls crypto 4h  9839   0.28794   0.00458       -0.00191 0.00005     0.00196 0.00100
+       indikator                  macd_zero_lo crypto 4h  3592   0.28090   0.01773        0.00534 0.00005     0.00304 0.00200
+       indikator            price_vs_ema200_lo crypto 4h  3540   0.14463   0.02613        0.00640 0.00005     0.00625 0.00005
+       indikator            price_vs_ema200_ls crypto 4h  7090   0.14894   0.01307       -0.00193 0.00105     0.00410 0.00075
+         kontrol       kontrol_swing_break_h10 crypto 4h  5604   0.47252   0.00329       -0.00184 0.00005     0.00230 0.00055
+kontrol_momentum         momentum_polos_200_lo crypto 4h  3107   0.29836   0.03768        0.00908 0.00055     0.00731 0.00005
+kontrol_momentum         momentum_polos_200_ls crypto 4h  6217   0.29998   0.01946       -0.00116 0.00165     0.00460 0.00005
+kontrol_momentum          momentum_polos_50_lo crypto 4h  6719   0.28873   0.00878        0.00199 0.00005     0.00102 0.00130
+    pola_chart_B double_top_bottom_longgar_h10 crypto 4h  2371   0.49979   0.00669       -0.00192 0.00005     0.00377 0.00060
+    pola_chart_B       flag_pennant_sedang_h10 crypto 4h   242   0.47521   0.01067       -0.00230 0.00095     0.01289 0.00050
+    pola_chart_B triple_top_bottom_longgar_h10 crypto 4h   621   0.45733   0.00670       -0.00183 0.00175     0.00414 0.00350
+       trendline               trendline_break crypto 4h  4953   0.39289   0.00219       -0.00189 0.00025     0.00138 0.00385
+    pola_chart_B            rectangle_ketat_mm    idx 1h    57   0.61404   0.01527       -0.00487 0.00270     0.01527 0.00270
+
+Strategi yang lolos, per era (catatan: lolos dipilih dari hasil yang sama, jadi era lama bias ke atas):
+             sel  mean_rg  null_rg  mean_net     win  median_p
+era                                                           
+A_2010_2017   34   3.8487   0.8705    0.2371  0.4282    0.2863
+B_2018_2021   35   1.7866   0.4162    0.0656  0.3810    0.0000
+C_2022_2026   36   0.6214   0.0754    0.0083  0.3562    0.0014
+
+Semua strategi indikator posisi di crypto (tanpa seleksi), per era:
+                sel  mean_rg  null_rg  median_p
+tf era                                         
+1d A_2010_2017   28   5.0213   0.0749    0.1522
+   B_2018_2021   34   6.3980   1.8115    0.0041
+   C_2022_2026   34   0.5372   0.2748    0.0537
+4h A_2010_2017   36   2.6368   0.5110    0.3727
+   B_2018_2021   36   1.1458   0.3913    0.0000
+   C_2022_2026   36   0.3513   0.0795    0.0054
