@@ -72,13 +72,20 @@
         'Keunggulan strategi ikut-tren atas entry acak di crypto 4 jam, per transaksi, dalam satuan volatilitas.',
         bars(f.era.map((e, k) => ({ label: e.label, value: e.edge, color: k ? RED : BLUE })), f.era[0].edge, '')],
     ];
+    if (f.buyhold) {
+      const tot = f.buyhold.reduce((a, b) => a + b.total, 0), win = f.buyhold.reduce((a, b) => a + b.menang, 0);
+      cards.unshift([`Beli lalu diamkan mengalahkan ${nf(100 * (1 - win / tot), 0)}% strategi`,
+        'Persen kombinasi strategi yang hasil akhirnya lebih tinggi dari membeli instrumen yang sama di awal data lalu mendiamkannya, di lebih dari separuh instrumennya. Keduanya setelah biaya. Di forex, beli lalu diamkan sendiri nyaris nol.',
+        bars(f.buyhold.map((b) => ({ label: `${b.label}: ${b.menang} dari ${nf(b.total, 0)}`, value: 100 * b.menang / b.total,
+          color: BLUE, text: nf(100 * b.menang / b.total, 0) + '%' })), 100, '%')]);
+    }
     $('findings').innerHTML = cards.map(([h, p, body]) => `<article><h3>${esc(h)}</h3><p>${esc(p)}</p>${body}</article>`).join('');
   }
 
   // ---------------------------------------------------------------- tabel semua hasil
   const table = { rows: [], sort: 'p', dir: 1, limit: 50, api: null };
   const COLS = [['label', 'Strategi'], ['market', 'Pasar'], ['n', 'Transaksi'], ['win', 'Menang'], ['net', 'Rata-rata per transaksi'],
-    ['rnd', 'Entry acak'], ['p', 'Nilai p'], ['verdict', 'Kesimpulan']];
+    ['rnd', 'Entry acak'], ['p', 'Nilai p'], ['cagr', 'Strategi per tahun'], ['bh', 'Beli-diamkan per tahun'], ['verdict', 'Kesimpulan']];
 
   function renderTable() {
     const m = $('a-market').value, g = $('a-group').value, v = $('a-verdict').value;
@@ -100,6 +107,8 @@
       `<td class="${r.net > 0 ? 'pos' : 'neg'}">${r.net === null ? '–' : pct(r.net * 100, 3)}</td>` +
       `<td>${r.rnd === null ? '–' : pct(r.rnd * 100, 3)}</td>` +
       `<td>${r.p === null ? '–' : r.p < 0.001 ? '&lt; 0,001' : nf(r.p, 3)}</td>` +
+      `<td class="${r.cagr > r.bh ? 'pos' : ''}">${r.cagr === null ? '–' : pct(r.cagr * 100, 1)}</td>` +
+      `<td>${r.bh === null ? '–' : pct(r.bh * 100, 1)}</td>` +
       `<td class="${r.verdict === 'Lolos' ? 'tag-pass' : ''}">${r.verdict}</td></tr>`).join('') + '</tbody>';
   }
 
@@ -109,7 +118,7 @@
     renderFindings(index.findings);
     for (const s of index.strategies) for (const c of s.cells) {
       table.rows.push({ id: s.id, label: s.label, group: s.group, market: c.market, marketLabel: `${index.markets[c.market]}, ${TF[c.tf]}`,
-        n: c.n, win: c.win, net: c.net, rnd: c.rnd, p: c.p, verdict: verdict(c) });
+        n: c.n, win: c.win, net: c.net, rnd: c.rnd, p: c.p, cagr: c.inst ? c.cagr : null, bh: c.inst ? c.bh : null, verdict: verdict(c) });
     }
     $('a-market').innerHTML = '<option value="">Semua pasar</option>' + Object.entries(index.markets).map(([k, v]) => `<option value="${k}">${v}</option>`).join('');
     $('a-group').innerHTML = '<option value="">Semua kelompok</option>' + Object.entries(index.groups).map(([k, v]) => `<option value="${k}">${v}</option>`).join('');

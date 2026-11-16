@@ -26,7 +26,7 @@ OUT = ROOT / "post" / "gambar"
 
 INK, MUTED, GRID, BG = "#16202a", "#66727f", "#dfe4ea", "#ffffff"
 RED, GREEN, BLUE, AMBER, GREY = "#c8442f", "#1f8a5b", "#2f6fb0", "#d99a1c", "#aab3bd"
-SOURCE = "Data: Yahoo Finance & Binance, 2010–2026 · 210 strategi, 2.066 kombinasi · kode terbuka"
+SOURCE = "Data: Yahoo Finance & Binance, 2010–2026. Kode dan semua hasil terbuka."
 
 plt.rcParams.update({
     "font.family": "DejaVu Sans", "font.size": 15, "text.color": INK, "axes.labelcolor": INK,
@@ -182,6 +182,29 @@ def fig_momentum():
            "05_momentum_vs_indikator.png")
 
 
+def fig_buyhold(v):
+    t = v[~v.control & v.instrumen.notna()]
+    fig = plt.figure(figsize=(16, 9))
+    ax = fig.add_axes([0.22, 0.14, 0.72, 0.58])
+    rows = [(lab.replace("\n", " "), t[t.market == m]) for m, lab in MARKETS]
+    y = np.arange(len(rows))
+    share = [100 * d.beats_bh.mean() for _, d in rows]
+    ax.barh(y, [100] * len(rows), 0.55, color="#eef1f6")
+    ax.barh(y, share, 0.55, color=BLUE)
+    for i, (lab, d) in enumerate(rows):
+        ax.text(101.5, i, f"{int(d.beats_bh.sum())} dari {len(d):,}".replace(",", "."), va="center", fontsize=17,
+                fontweight="bold")
+    ax.set_yticks(y, [r[0] for r in rows], fontsize=17)
+    ax.invert_yaxis()
+    ax.set_xlim(0, 125)
+    ax.set_xticks([0, 25, 50, 75, 100], ["0%", "25%", "50%", "75%", "100%"])
+    ax.set_xlabel("Kombinasi strategi yang hasil akhirnya mengalahkan beli lalu diamkan")
+    total = 100 * (1 - t.beats_bh.mean())
+    finish(fig, f"Beli lalu diamkan mengalahkan {total:.0f}% strategi technical analysis",
+           "Modal yang menjalankan strategi terus-menerus dibanding modal yang membeli instrumen yang sama di awal data lalu "
+           "mendiamkannya, setelah biaya. Menang = lebih tinggi di lebih dari separuh instrumen.", "06_beli_lalu_diamkan.png")
+
+
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     v = pd.read_csv(FINAL / "verdicts.csv")
@@ -191,6 +214,7 @@ def main() -> None:
     fig_fib(v)
     print(fig_era(allt).round(3).to_string())
     fig_momentum()
+    fig_buyhold(v)
 
 
 if __name__ == "__main__":

@@ -199,7 +199,7 @@ def fib_signals(o, h, l, p_idx, p_px, p_type, p_conf, level, ext):
         end = min(n, conf + 1 + max(10, 3 * (p_idx[k] - p_idx[k - 1])))
         for j in range(conf + 1, end):
             if d == 1:
-                if l[j] <= entry:
+                if l[j] < entry:      # harus menembus, bukan sekadar menyentuh
                     e_idx[k_out] = j
                     e_px[k_out] = min(o[j], entry)
                     s_dir[k_out] = 1
@@ -210,7 +210,7 @@ def fib_signals(o, h, l, p_idx, p_px, p_type, p_conf, level, ext):
                 if h[j] > b:
                     break
             else:
-                if h[j] >= entry:
+                if h[j] > entry:
                     e_idx[k_out] = j
                     e_px[k_out] = max(o[j], entry)
                     s_dir[k_out] = -1

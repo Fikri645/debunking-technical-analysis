@@ -22,11 +22,14 @@ def _out(m):
 
 @njit(cache=True)
 def _fill(o, h, l, start, end, d, level):
-    """Candle pertama yang menyentuh `level` (limit order). -1 jika tidak ada."""
+    """Candle pertama yang menembus `level` (limit order). -1 jika tidak ada.
+    Sentuhan persis di harga limit tidak dihitung terisi: order sungguhan yang
+    antre di harga itu sering tidak terisi, dan menghitungnya memberi strategi
+    harga terbaik candle itu."""
     for j in range(start, end):
-        if d == 1 and l[j] <= level:
+        if d == 1 and l[j] < level:
             return j, min(o[j], level)
-        if d == -1 and h[j] >= level:
+        if d == -1 and h[j] > level:
             return j, max(o[j], level)
     return -1, 0.0
 

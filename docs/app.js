@@ -26,13 +26,15 @@
 
   function verdictOf(c) {
     if (!c || !c.n) return ['fail', 'Terlalu sedikit transaksi untuk diuji.'];
-    if (c.passes) return ['pass', 'Lolos: mengalahkan entry acak dan untung setelah biaya, termasuk di 2022–2026.'];
+    if (c.passes) return ['pass', `Lolos: mengalahkan entry acak, untung setelah biaya termasuk di 2022–2026, dan untung di ${c.pos} dari ${c.inst} instrumen.`];
+    if (c.beats && c.profit) return ['mixed', `Mengalahkan entry acak dan untung secara rata-rata, tetapi tidak merata: hanya untung di ${c.pos} dari ${c.inst} instrumen (atau tidak bertahan merata di 2022–2026), jadi tidak lolos.`];
     if (c.beats) return ['mixed', 'Lebih baik dari entry acak, tetapi tidak untung setelah biaya di semua periode.'];
     if (c.p !== null && c.p < 0.05) return ['mixed', 'Sekilas lebih baik dari entry acak, tetapi tidak bertahan setelah koreksi untuk banyaknya uji atau di 2022–2026.'];
     if (c.profit) return ['fail', 'Untung, tetapi tidak lebih baik dari entry acak. Untungnya datang dari arah pasar, bukan dari sinyal.'];
     return ['fail', 'Tidak lebih baik dari entry acak.'];
   }
-  const shortVerdict = (c) => (!c.n ? 'data kurang' : c.passes ? 'Lolos' : c.beats ? 'kalah oleh biaya' : c.profit ? 'untung, setara acak' : 'setara acak');
+  const shortVerdict = (c) => (!c.n ? 'data kurang' : c.passes ? 'Lolos' : c.beats && c.profit ? 'tidak merata' : c.beats ? 'kalah oleh biaya' : c.profit ? 'untung, setara acak' : 'setara acak');
+  const bhText = (c) => (!c.inst || c.cagr === null ? '–' : `${pct(c.cagr * 100, 1)} vs ${pct(c.bh * 100, 1)}`);
 
   // ---------------------------------------------------------------- matriks
   function renderMatrix() {
@@ -67,6 +69,7 @@
     $('headline-result').textContent =
       `Hasilnya: di saham dan forex ${tt.non_crypto[0]} dari ${nf(tt.non_crypto[1], 0)} kombinasi lolos. ` +
       `Di crypto ${tt.crypto[0]} dari ${nf(tt.crypto[1], 0)}, semuanya ikut-tren, dan aturan satu kalimat tanpa indikator hasilnya setara.`;
+    $('lede-count').textContent = nf(tt.strategies, 0);
   }
 
   // ---------------------------------------------------------------- daftar
@@ -133,7 +136,12 @@
       v.className = 'verdict ' + cls;
       v.textContent = text + (c && c.n ? ` (${nf(c.n, 0)} transaksi, rata-rata ${pct(c.net * 100, 3)} per transaksi setelah biaya; entry acak ${pct(c.rnd * 100, 3)}.)` : '');
       renderBell(c);
-    } else { v.className = 'verdict'; v.textContent = ''; $('bell').innerHTML = ''; }
+      $('s-bh').textContent = c && c.inst && c.cagr !== null
+        ? `Dibanding beli lalu diamkan: strategi ini menghasilkan ${pct(c.cagr * 100, 1)} per tahun (median antar-instrumen), ` +
+          `beli lalu diamkan ${pct(c.bh * 100, 1)} per tahun. Strategi menang di ${c.bhWin} dari ${c.inst} instrumen, ` +
+          `dengan modal berada di pasar ${nf(Math.min(100, c.expo * 100), 0)}% waktu.`
+        : '';
+    } else { v.className = 'verdict'; v.textContent = ''; $('bell').innerHTML = ''; $('s-bh').textContent = ''; }
     showTrade();
     syncHash();
   }
@@ -173,10 +181,11 @@
         `<td class="${cls}">${c.net === null ? '–' : pct(c.net * 100, 3)}</td>` +
         `<td>${c.rnd === null ? '–' : pct(c.rnd * 100, 3)}</td>` +
         `<td>${c.p === null ? '–' : c.p < 0.001 ? '&lt; 0,001' : nf(c.p, 3)}</td>` +
+        `<td>${c.inst ? c.pos + ' dari ' + c.inst : '–'}</td><td>${bhText(c)}</td>` +
         `<td class="${c.passes ? 'tag-pass' : ''}">${shortVerdict(c)}</td></tr>`;
     }).join('');
     $('s-stats').innerHTML = '<thead><tr><th>Pasar</th><th>Transaksi</th><th>Menang</th><th>Rata-rata per transaksi</th>' +
-      '<th>Entry acak</th><th>Nilai p</th><th>Kesimpulan</th></tr></thead><tbody>' + rows + '</tbody>';
+      '<th>Entry acak</th><th>Nilai p</th><th>Instrumen untung</th><th>Per tahun: strategi vs beli-diamkan</th><th>Kesimpulan</th></tr></thead><tbody>' + rows + '</tbody>';
   }
 
   // ---------------------------------------------------------------- transaksi

@@ -194,12 +194,16 @@ def run(df: pd.DataFrame, signals: pd.DataFrame, cost: float, atr_arr=None) -> p
 
 
 @njit(parallel=True, cache=True)
-def _null(ts, o, h, l, c, atr_arr, t_entry, win_a, win_b, d, sl_atr, tp_atr, hold, cost, shifts):
-    """Untuk tiap geseran waktu, pindahkan semua transaksi lalu jalankan ulang.
+def _null(o, h, l, c, atr_arr, e_idx, bar_a, bar_b, d, sl_atr, tp_atr, hold, cost, shifts):
+    """Untuk tiap geseran, pindahkan semua transaksi lalu jalankan ulang.
+    Geseran dihitung dalam jumlah candle, melingkar di dalam rentang candle
+    [bar_a, bar_b) milik instrumen itu sendiri. Dengan begitu entry acak tersebar
+    merata di semua candle (tidak menumpuk di candle pembuka sesi), dan instrumen
+    yang datanya mulai belakangan tidak kehilangan transaksi pembanding.
     Mengembalikan jumlah rg (return kotor per volatilitas), jumlah return bersih, dan banyaknya transaksi per geseran."""
     K = len(shifts)
     n = len(o)
-    m = len(t_entry)
+    m = len(e_idx)
     sum_rn = np.zeros(K)
     sum_net = np.zeros(K)
     cnt = np.zeros(K)
@@ -208,11 +212,10 @@ def _null(ts, o, h, l, c, atr_arr, t_entry, win_a, win_b, d, sl_atr, tp_atr, hol
         snet = 0.0
         cn = 0.0
         for i in range(m):
-            length = win_b[i] - win_a[i]
-            if length <= 0:
+            length = bar_b[i] - bar_a[i]
+            if length <= 1:
                 continue
-            t2 = win_a[i] + (t_entry[i] - win_a[i] + np.int64(shifts[k] * length)) % length
-            ei = np.searchsorted(ts, t2)
+            ei = bar_a[i] + (e_idx[i] - bar_a[i] + np.int64(shifts[k] * length)) % length
             if ei < 1 or ei >= n:
                 continue
             a = atr_arr[ei - 1]
@@ -239,17 +242,20 @@ def _null(ts, o, h, l, c, atr_arr, t_entry, win_a, win_b, d, sl_atr, tp_atr, hol
 def null_sums(df: pd.DataFrame, trades: pd.DataFrame, cost: float, shifts: np.ndarray,
               win_a: np.ndarray, win_b: np.ndarray, atr_arr=None):
     """Pembanding acak untuk satu instrumen. win_a/win_b: jendela waktu (ns) tiap
-    transaksi, tempat transaksi itu digeser secara melingkar. Semua instrumen dalam
-    satu sel uji memakai `shifts` yang sama, sehingga transaksi yang bergerombol
-    di waktu yang sama tetap bergerombol."""
+    transaksi; transaksi digeser melingkar di antara candle instrumen ini yang ada
+    di jendela itu. Semua instrumen dalam satu sel uji memakai `shifts` (pecahan
+    panjang jendela) yang sama, sehingga transaksi yang bergerombol di waktu yang
+    sama tetap bergerombol sejauh instrumennya punya rentang data yang sama."""
     if atr_arr is None:
         atr_arr = atr(df)
     o, h, l, c = (df[k].values.astype(float) for k in ("open", "high", "low", "close"))
     ts = ts_ns(df.index)
+    t_entry = trades["entry_time"].values.astype("datetime64[ns]").astype(np.int64)
     return _null(
-        ts, o, h, l, c, atr_arr,
-        trades["entry_time"].values.astype("datetime64[ns]").astype(np.int64),
-        np.asarray(win_a, dtype=np.int64), np.asarray(win_b, dtype=np.int64),
+        o, h, l, c, atr_arr,
+        np.searchsorted(ts, t_entry).astype(np.int64),
+        np.searchsorted(ts, np.asarray(win_a, dtype=np.int64)).astype(np.int64),
+        np.searchsorted(ts, np.asarray(win_b, dtype=np.int64)).astype(np.int64),
         trades["dir"].values.astype(np.int64),
         trades["sl_atr"].values.astype(float), trades["tp_atr"].values.astype(float),
         trades["hold"].values.astype(np.int64), float(cost), np.asarray(shifts, dtype=float))

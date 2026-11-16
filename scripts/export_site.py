@@ -21,16 +21,16 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-from talab import (engine, evaluate, levels, patterns, strat_candles, strat_indicators,  # noqa: E402
+from talab import (engine, evaluate, levels, patterns, strat_candles, strat_extra, strat_indicators,  # noqa: E402
                    strat_influencer, strat_momentum, strat_patterns, strat_smc)
 from talab import indicators as ta  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 FINAL = ROOT / "results" / "final"
 SITE = ROOT / "docs" / "data"
-CELLS = [("idx", "1d"), ("us", "1d"), ("forex", "1d"), ("crypto", "4h")]
-CELLS_INTRADAY = [("idx", "1h"), ("us", "1h"), ("forex", "1h"), ("crypto", "1h")]
-N_TRADES = 6
+CELLS = [("idx", "1d"), ("us", "1d"), ("forex", "1d"), ("crypto", "1d"), ("crypto", "4h"),
+         ("idx", "1h"), ("us", "1h"), ("forex", "1h"), ("crypto", "1h"), ("crypto", "15m")]
+N_TRADES = 4
 BEFORE, AFTER, MAX_AFTER = 70, 18, 220
 
 GROUP_LABEL = {
@@ -137,6 +137,14 @@ BASE = {
     "zodiak_fase_bulan": ("Fase bulan", "Long saat bulan membesar, short saat bulan mengecil."),
     "zodiak_merkurius_retrograde": ("Merkurius retrograde", "Short saat Merkurius retrograde, long saat tidak."),
     "zodiak_elemen": ("Elemen zodiak", "Long saat Matahari di zodiak api/udara, short saat di zodiak tanah/air."),
+    "rounding": ("Rounding bottom / top", "Harga membentuk lengkungan mulus selama 40 atau 80 candle; masuk saat menembus bibir lengkungan."),
+    "channel_bounce": ("Channel: pantulan di tepi", "Dua garis tren sejajar yang mengurung harga; masuk saat memantul di satu tepi, target tepi seberang."),
+    "channel_break": ("Channel: tembus", "Dua garis tren sejajar yang mengurung harga; masuk searah saat penutupan menembus tepinya, target selebar channel."),
+    "smc_fvg_pd": ("Fair value gap + premium/discount", "FVG, tetapi beli hanya di separuh bawah rentang swing terakhir (discount) dan jual hanya di separuh atas (premium)."),
+    "smc_orderblock_pd": ("Order block + premium/discount", "Order block, tetapi beli hanya di area discount dan jual hanya di area premium."),
+    "mtf_ema_9_21": ("EMA 9/21 searah tren harian", "EMA 9/21 cross di timeframe kecil, hanya saat searah tren harian (EMA 20 vs EMA 50 harian)."),
+    "mtf_macd_signal": ("MACD searah tren harian", "MACD vs garis sinyal di timeframe kecil, hanya saat searah tren harian."),
+    "mtf_rsi_cross": ("Pullback RSI searah tren harian", "Beli saat RSI naik menembus 30 hanya kalau tren harian naik; jual saat RSI turun menembus 70 hanya kalau tren harian turun."),
     "kontrol_swing_break": ("Tembus swing terakhir (tanpa pola)", "Masuk saat penutupan menembus swing high/low terakhir. Tidak ada syarat bentuk."),
 }
 TOL_TEXT = {"ketat": "toleransi ketat", "sedang": "toleransi sedang", "longgar": "toleransi longgar"}
@@ -159,6 +167,10 @@ def describe(name: str) -> tuple[str, str]:
         b, tol = base.rsplit("_", 1)
         label, rule = BASE[b]
         tag = f"{TOL_TEXT[tol]}, {tag}"
+    elif base.endswith("_sr") and base[:-3] in BASE:
+        label, rule = BASE[base[:-3]]
+        label += " di area support/resistance"
+        rule += " Hanya dihitung kalau candle-nya menyentuh level support (untuk beli) atau resistance (untuk jual)."
     elif base.startswith("sr_"):
         _, mode, touch = base.split("_")
         mode_t = {"bounce": "pantulan", "breakout": "breakout", "retest": "breakout lalu retest"}[mode]
@@ -198,7 +210,7 @@ def describe(name: str) -> tuple[str, str]:
 def registry() -> dict[str, dict]:
     reg = {}
     for build in (strat_indicators.build, strat_candles.build, strat_patterns.build, strat_patterns.build_controls,
-                  strat_smc.build, strat_influencer.build, strat_momentum.build):
+                  strat_smc.build, strat_influencer.build, strat_momentum.build, strat_extra.build):
         reg.update(build())
     return reg
 
@@ -237,8 +249,79 @@ def ov(name, values, a, b, pane="price", ref=None):
     return d
 
 
+def supertrend_line(h, l, c, atr_arr, mult):
+    """Garis Supertrend; logikanya sama persis dengan indicators.supertrend."""
+    out = np.full(len(c), np.nan)
+    fu = fl = np.nan
+    d = 0
+    for i in range(len(c)):
+        a = atr_arr[i]
+        if np.isnan(a):
+            continue
+        mid = (h[i] + l[i]) / 2
+        bu, bl = mid + mult * a, mid - mult * a
+        if d == 0:
+            fu, fl = bu, bl
+            d = 1 if c[i] >= mid else -1
+        else:
+            fu = bu if (bu < fu or c[i - 1] > fu) else fu
+            fl = bl if (bl > fl or c[i - 1] < fl) else fl
+            if d == 1 and c[i] < fl:
+                d = -1
+            elif d == -1 and c[i] > fu:
+                d = 1
+        out[i] = fl if d == 1 else fu
+    return out
+
+
+def psar_line(h, l, af0, af_max):
+    """Titik Parabolic SAR; logikanya sama persis dengan indicators.psar."""
+    n = len(h)
+    out = np.full(n, np.nan)
+    if n < 3:
+        return out
+    up = h[1] >= h[0]
+    sar = l[0] if up else h[0]
+    ep = h[1] if up else l[1]
+    af = af0
+    for i in range(2, n):
+        sar = sar + af * (ep - sar)
+        if up:
+            sar = min(sar, l[i - 1], l[i - 2])
+            if l[i] < sar:
+                up, sar, ep, af = False, ep, l[i], af0
+            elif h[i] > ep:
+                ep, af = h[i], min(af + af0, af_max)
+        else:
+            sar = max(sar, h[i - 1], h[i - 2])
+            if h[i] > sar:
+                up, sar, ep, af = True, ep, h[i], af0
+            elif l[i] < ep:
+                ep, af = l[i], min(af + af0, af_max)
+        out[i] = sar
+    return out
+
+
 def overlays(base: str, df: pd.DataFrame, a: int, b: int) -> list[dict]:
     o, h, l, c, v = strat_indicators.arrays(df)
+    if base == "supertrend_10_3":
+        return [ov("Supertrend", supertrend_line(h, l, c, ta.atr(h, l, c, 10), 3.0), a, b)]
+    if base == "parabolic_sar":
+        return [ov("Parabolic SAR", psar_line(h, l, 0.02, 0.2), a, b)]
+    if base == "vwap":
+        day = df.index.tz_convert(None).normalize()
+        tp = (h + l + c) / 3
+        pv = pd.Series(tp * v).groupby(day.values).cumsum().values
+        vv = pd.Series(v).groupby(day.values).cumsum().values
+        with np.errstate(divide="ignore", invalid="ignore"):
+            return [ov("VWAP", pv / vv, a, b)]
+    if base == "mtf_ema_9_21":
+        return [ov("EMA 9", ta.ema(c, 9), a, b), ov("EMA 21", ta.ema(c, 21), a, b)]
+    if base == "mtf_macd_signal":
+        line, sig = ta.macd(c)
+        return [ov("MACD", line, a, b, "sub", [0]), ov("Sinyal", sig, a, b, "sub")]
+    if base == "mtf_rsi_cross":
+        return [ov("RSI 14", ta.rsi(c), a, b, "sub", [30, 70])]
     if base == "sma_20_50":
         return [ov("SMA 20", ta.sma(c, 20), a, b), ov("SMA 50", ta.sma(c, 50), a, b)]
     if base == "golden_cross_50_200":
@@ -314,6 +397,28 @@ def geometry(name: str, base: str, group: str, df: pd.DataFrame, tr) -> list[dic
     entry, d = int(tr.entry_idx), int(tr.dir)
     sig = entry - 1
     o, h, l, c = strat_patterns._ohlc(df)
+    if base == "rounding":
+        idx, dirs, _, _, start, rim = strat_extra.rounding_raw(df)
+        hit = np.flatnonzero((idx == sig) & (dirs == d))
+        if len(hit) == 0:
+            return []
+        k = hit[0]
+        return [dict(k="span", i0=int(start[k]), i1=sig, label="lengkungan"),
+                dict(k="hline", p=float(rim[k]), i0=int(start[k]), i1=sig, label="bibir lengkungan")]
+    if base in ("channel_bounce", "channel_break"):
+        idx, dirs, _, _, geo = strat_extra.channel_raw(df, 0 if base == "channel_bounce" else 1)
+        hit = np.flatnonzero((idx == sig) & (dirs == d))
+        if len(hit) == 0:
+            return []
+        g = geo[hit[0]]
+        return [dict(k="line", i0=int(g[0]), p0=float(g[1]), i1=sig, p1=float(g[2]), label="tepi bawah"),
+                dict(k="line", i0=int(g[3]), p0=float(g[4]), i1=sig, p1=float(g[5]), label="tepi atas")]
+    if base == "smc_fvg_pd":
+        return _zone(strat_extra.fvg_pd_raw(df), entry, d, "fair value gap")
+    if base == "smc_orderblock_pd":
+        return _zone(strat_extra.ob_pd_raw(df), entry, d, "order block")
+    if base.endswith("_sr") and base[:-3] in CANDLE_LEN:
+        return [dict(k="span", i0=sig - CANDLE_LEN[base[:-3]] + 1, i1=sig, label="pola")]
     if group == "pola_chart_B":
         pat, tol, _ = name.rsplit("_", 2)
         t = patterns.TOL_NAMES.index(tol)
@@ -452,7 +557,7 @@ def export_strategy(name: str, spec: dict) -> dict:
     base = "_".join(parts[:-1]) if parts[-1] in EXIT_TEXT else name
     if base.rsplit("_", 1)[-1] in TOL_TEXT:
         base = base.rsplit("_", 1)[0]
-    cells = CELLS_INTRADAY if spec.get("intraday") else CELLS
+    cells = [x for x in CELLS if not (spec.get("intraday") and x[1] == "1d")]
     rng = np.random.default_rng(zlib.crc32(name.encode()))
     out = {}
     for market, tf in cells:
@@ -482,7 +587,11 @@ def write_index(reg: dict) -> None:
             cells.append(dict(market=r.market, tf=r.tf, n=int(r.n) if np.isfinite(r.n) else 0,
                               win=r6(r.win_rate), net=r6(r.mean_net), rnd=r6(r.null_mean_net), p=r6(r.p), z=r6(r.z),
                               netC=r6(r.mean_net_C), pC=r6(r.p_C), beats=bool(r.beats_random),
-                              profit=bool(r.profitable), passes=bool(r.passes)))
+                              profit=bool(r.profitable), passes=bool(r.passes), broad=bool(r.broad),
+                              inst=int(r.instrumen) if np.isfinite(r.instrumen) else 0,
+                              pos=int(r.positif) if np.isfinite(r.positif) else 0,
+                              bhWin=int(r.bh_menang) if np.isfinite(r.bh_menang) else 0,
+                              cagr=r6(r.cagr), bh=r6(r.bh_cagr), expo=r6(r.exposure)))
         strategies.append(dict(id=name, group=spec["group"], label=label, rule=rule, cells=cells,
                                passes=int(sum(c["passes"] for c in cells))))
     ta_rows = v[~v.control]
@@ -497,7 +606,7 @@ def write_index(reg: dict) -> None:
     index = dict(groups=GROUP_LABEL, markets=MARKET_LABEL, strategies=strategies, matrix=matrix,
                  findings=findings(v),
                  totals=dict(strategies=int(ta_rows.strategy.nunique()), combos=int(len(ta_rows)),
-                             passes=int(ta_rows.passes.sum()),
+                             passes=int(ta_rows.passes.sum()), passes_2of3=int(ta_rows.passes_2of3.sum()),
                              non_crypto=[int(ta_rows[ta_rows.market != "crypto"].passes.sum()),
                                          int((ta_rows.market != "crypto").sum())],
                              crypto=[int(ta_rows[ta_rows.market == "crypto"].passes.sum()),
@@ -527,7 +636,11 @@ def findings(v: pd.DataFrame) -> dict:
     s = s[(s.market == "crypto") & (s.sisi == "lo") & s.tf.isin(["1d", "4h"])]
     mom = [dict(tf=r.tf, buyhold=round(r.sharpe_buyhold, 2), indikator=round(r.sharpe_indikator, 2),
                 momentum=round(r.sharpe_momentum, 2)) for r in s.itertuples()]
-    return dict(proof=proof, fib=fib, era=era, momentum=mom)
+    t = v[~v.control & v.instrumen.notna()]
+    bh = [dict(label=MARKET_LABEL[m], total=int(len(d)), menang=int(d.beats_bh.sum()),
+               cagr=round(100 * float(d.cagr.median()), 1), bh=round(100 * float(d.bh_cagr.median()), 1))
+          for m, d in ((m, t[t.market == m]) for m in MARKET_LABEL)]
+    return dict(proof=proof, fib=fib, era=era, momentum=mom, buyhold=bh)
 
 
 def main() -> None:

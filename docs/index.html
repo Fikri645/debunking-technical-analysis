@@ -5,6 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Technical analysis vs entry acak: lihat sendiri tiap pola dan posisinya</title>
 <meta name="description" content="210 strategi technical analysis diuji melawan entry acak di saham, forex, dan crypto. Lihat pola, zona, dan posisi yang diuji langsung di chart.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Technical analysis diadu dengan entry acak">
+<meta property="og:description" content="Ratusan strategi technical analysis diuji melawan entry acak dan beli-lalu-diamkan di saham, forex, dan crypto. Lihat tiap pola dan posisinya di chart.">
+<meta property="og:url" content="https://fikri645.github.io/debunking-technical-analysis/">
+<meta property="og:image" content="https://fikri645.github.io/debunking-technical-analysis/og.png">
+<meta property="og:image:width" content="1600">
+<meta property="og:image:height" content="900">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://fikri645.github.io/debunking-technical-analysis/og.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&display=swap" rel="stylesheet">
@@ -14,7 +23,7 @@
 <header class="masthead">
   <div class="wrap">
     <h1>Technical analysis diadu dengan entry acak</h1>
-    <p class="lede">210 strategi yang diajarkan di kelas trading, dari RSI sampai order block, diuji di 115 saham, pasangan forex, dan koin, data 2010–2026. Tiap strategi harus mengalahkan entry acak yang arah, SL, TP, dan lama pegangnya sama persis, lalu tetap untung setelah biaya.</p>
+    <p class="lede"><span id="lede-count">Ratusan</span> strategi yang diajarkan di kelas trading, dari RSI sampai order block, diuji di 115 saham, pasangan forex, dan koin, data 2010–2026. Tiap strategi harus mengalahkan entry acak yang arah, SL, TP, dan lama pegangnya sama persis, tetap untung setelah biaya, dan bekerja di banyak instrumen, bukan satu saja. Hasilnya juga dibandingkan dengan beli lalu diamkan.</p>
     <p class="lede" id="headline-result"></p>
   </div>
 </header>
@@ -27,7 +36,7 @@
   </section>
 
   <section aria-labelledby="h-findings">
-    <h2 id="h-findings">Empat temuan</h2>
+    <h2 id="h-findings">Lima temuan</h2>
     <div class="findings" id="findings"></div>
   </section>
 
@@ -49,6 +58,7 @@
         <div class="cells" id="s-cells" role="tablist" aria-label="Pasar"></div>
         <p id="s-verdict" class="verdict"></p>
         <div id="bell" class="bell"></div>
+        <p id="s-bh" class="group-note"></p>
 
         <div class="chart-head">
           <div id="t-title" class="t-title"></div>
@@ -86,7 +96,7 @@
       <label class="field"><span>Pasar</span><select id="a-market"></select></label>
       <label class="field"><span>Kelompok</span><select id="a-group"></select></label>
       <label class="field"><span>Kesimpulan</span><select id="a-verdict">
-        <option value="">Semua</option><option>Lolos</option><option>kalah oleh biaya</option>
+        <option value="">Semua</option><option>Lolos</option><option>tidak merata</option><option>kalah oleh biaya</option>
         <option>untung, setara acak</option><option>setara acak</option></select></label>
       <span id="a-count" class="count"></span>
     </div>
@@ -100,7 +110,9 @@
       <dt>Entry acak</dt>
       <dd>Semua transaksi strategi digeser ke waktu acak, 1.000 sampai 20.000 kali, dengan arah, jarak SL/TP, dan lama pegang yang sama. Kalau hasil strategi tidak menonjol dari ribuan versi acak itu, sinyalnya tidak meramal apa-apa.</dd>
       <dt>Lolos</dt>
-      <dd>Mengalahkan entry acak dan untung setelah biaya, di seluruh periode dan di 2022–2026, setelah koreksi untuk banyaknya uji yang dijalankan.</dd>
+      <dd>Tiga syarat sekaligus: mengalahkan entry acak (setelah koreksi untuk banyaknya uji yang dijalankan), untung setelah biaya di seluruh periode dan di 2022–2026, dan untung di minimal 60% instrumen yang punya transaksi.</dd>
+      <dt>Beli lalu diamkan</dt>
+      <dd>Modal yang menjalankan strategi terus-menerus di satu instrumen dibandingkan dengan modal yang membeli instrumen itu di awal data dan mendiamkannya. Angka per tahun adalah median antar-instrumen, setelah biaya.</dd>
       <dt>Kenapa untung saja tidak cukup</dt>
       <dd>Strategi berdasarkan fase bulan dan Merkurius retrograde pun “untung” di lebih dari separuh pasar, karena harga memang cenderung naik. Tidak satu pun mengalahkan entry acak.</dd>
       <dt>Batasan</dt>

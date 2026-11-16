@@ -19,7 +19,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from talab import (evaluate, strat_candles, strat_indicators, strat_influencer, strat_momentum,  # noqa: E402
+from talab import (evaluate, strat_candles, strat_indicators, strat_influencer, strat_extra, strat_momentum,  # noqa: E402
                    strat_patterns, strat_smc)
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -37,6 +37,7 @@ STAGES = {
     "stage4": strat_smc.build,
     "stage5": strat_influencer.build,
     "stage6_momentum": strat_momentum.build,
+    "stage7_tambahan": strat_extra.build,
 }
 
 K_FAST, K_FINE = 1000, 20000
