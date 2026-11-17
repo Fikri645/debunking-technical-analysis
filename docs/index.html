@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=5">
+<link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
 <header class="masthead">
@@ -83,6 +83,24 @@
         </div>
         <p id="t-result" class="result" aria-live="polite"></p>
 
+        <h4 id="h-full">Seluruh riwayat uji di satu chart</h4>
+        <p class="note">Semua candle instrumen ini dari awal sampai akhir data, dengan setiap posisi yang dibuka strategi. Seret untuk menggeser, putar roda mouse untuk memperbesar, pilih sebuah posisi untuk rinciannya. Panel bawah membandingkan modal strategi dengan beli lalu diamkan.</p>
+        <div class="controls">
+          <label class="field inline"><span>Instrumen</span><select id="fc-sym"></select></label>
+          <button id="fc-prev" type="button">Posisi sebelumnya</button>
+          <button id="fc-next" type="button">Posisi berikutnya</button>
+          <button id="fc-out" type="button">Perkecil</button>
+          <button id="fc-in" type="button">Perbesar</button>
+          <button id="fc-all" type="button">Seluruh periode</button>
+        </div>
+        <div class="legend full-legend" id="fc-legend"></div>
+        <div class="chart-box">
+          <canvas id="fchart" tabindex="0" role="img" aria-label="Chart seluruh riwayat harga dengan semua posisi strategi"></canvas>
+          <div id="fc-readout" class="readout" aria-hidden="true"></div>
+        </div>
+        <p id="fc-summary" class="group-note"></p>
+        <p id="fc-trade" class="result" aria-live="polite"></p>
+
         <h4>Hasil strategi ini di semua pasar</h4>
         <div class="matrix-scroll"><table class="stats" id="s-stats"></table></div>
       </div>
@@ -124,7 +142,8 @@
 <footer class="wrap foot">
   <p>Data harga: Yahoo Finance dan Binance. <a href="https://github.com/Fikri645/debunking-technical-analysis">Kode dan semua hasil uji</a> terbuka untuk diperiksa.</p>
 </footer>
-<script src="extras.js?v=5"></script>
-<script src="app.js?v=5"></script>
+<script src="extras.js?v=6"></script>
+<script src="full.js?v=6"></script>
+<script src="app.js?v=6"></script>
 </body>
 </html>

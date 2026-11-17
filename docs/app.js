@@ -144,6 +144,7 @@
     } else { v.className = 'verdict'; v.textContent = ''; $('bell').innerHTML = ''; $('s-bh').textContent = ''; }
     showTrade();
     syncHash();
+    window.dispatchEvent(new CustomEvent('ta-cell', { detail: { id: state.strategy.id, cell: k || null, strategy: state.strategy, markets: INDEX.markets } }));
   }
 
   // Posisi strategi di antara versi acaknya, digambar dari skor z uji tersebut

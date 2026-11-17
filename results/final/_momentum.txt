@@ -1,7 +1,7 @@
 Keunggulan atas entry acak (edge = mean_rg - null_mean_rg), per sel:
                                 strategi  lolos  kalahkan_acak  edge_median  edge_maks  edge_C_median  z_median  net_median
 market tf  sisi jenis                                                                                                      
-crypto 15m lo   indikator tren        14      0              4       0.0683     0.7796         0.0651    3.4187     -0.0017
+crypto 15m lo   indikator tren        14      0              3       0.0683     0.7796         0.0651    3.4187     -0.0017
                 momentum polos         5      0              2       0.0525     0.1884         0.0337    3.3159     -0.0017
            ls   indikator tren        14      0              3       0.0432     0.7375         0.0470    2.9761     -0.0021
                 momentum polos         5      0              2       0.0375     0.1692         0.0211    3.0424     -0.0020
@@ -13,7 +13,7 @@ crypto 15m lo   indikator tren        14      0              4       0.0683     
                 momentum polos         5      0              4       0.1733     0.3684         0.1322    6.2714      0.0002
            ls   indikator tren        14      0              5       0.1847     1.5685         0.1282    4.7303     -0.0007
                 momentum polos         5      0              4       0.1563     0.3008         0.1230    5.3495     -0.0009
-       4h  lo   indikator tren        14      7             10       0.5095     4.8237         0.3789    5.3159      0.0127
+       4h  lo   indikator tren        14      6              9       0.5095     4.8237         0.3789    5.3159      0.0127
                 momentum polos         5      1              4       0.3540     1.4180         0.2541    5.6896      0.0088
            ls   indikator tren        14      3              5       0.4334     4.0243         0.2968    4.8317      0.0053
                 momentum polos         5      1              2       0.2956     1.0342         0.1938    5.1988      0.0035

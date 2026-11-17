@@ -19,7 +19,7 @@ Bukan tujuan: membuat strategi yang menguntungkan, memberi saran investasi, atau
 
 | Pasar | Instrumen | Sumber | Timeframe |
 |---|---|---|---|
-| Saham Indonesia | IHSG dan 42 saham besar | Yahoo Finance | harian 2010–2026, 1 jam sekitar 2 tahun terakhir |
+| Saham Indonesia | IHSG dan 42 saham besar | Yahoo Finance | harian 2010–2026, 1 jam sekitar 3 tahun terakhir |
 | Saham AS | SPY, QQQ, dan 49 saham besar | Yahoo Finance | sama |
 | Forex dan emas | 8 pasangan mata uang dan emas berjangka | Yahoo Finance | sama |
 | Crypto | 12 koin berpasangan USDT | Binance | harian, 4 jam, 1 jam, 15 menit sejak listing |
@@ -101,6 +101,19 @@ Setelah hasil pertama dipublikasikan, kode ditinjau oleh peninjau terpisah yang 
 - **Uji anti-mengintip terlalu longgar** untuk menangkap bocoran satu candle. Diperketat (lihat bagian 6).
 
 Selain itu, pasar yang datanya hanya mencakup satu era tidak lagi dihitung dua kali dalam koreksi uji berganda.
+
+### Definisi pola diperketat setelah hasil terbit
+
+Ini satu-satunya perubahan definisi yang dilakukan setelah hasil dipublikasikan, jadi dicatat terpisah. Saat contoh deteksi ditampilkan di website, terlihat tiga kelemahan bentuk:
+
+- **Cup and handle** tidak punya syarat kebulatan yang berarti. Bentuk V lurus menghabiskan 33% waktunya di sepertiga terbawah cangkir, sedangkan ambang lama 25% / 15% / 0%, sehingga bentuk V lolos sebagai "cangkir". Ambang baru 42% / 38% / 35% untuk sepertiga terbawah, ditambah syarat 62% / 60% / 56% candle ditutup di bawah tengah kedalaman (bentuk V: 50%, bentuk U: 87%), dan gagang minimal 4 candle.
+- **Garis "datar"** pada ascending/descending triangle dan rectangle boleh miring sampai 10% / 15% / 25% tinggi pola di antara dua sentuhan. Ambang baru 4% / 7% / 10%.
+- **Double top/bottom longgar** menerima dua puncak yang hanya berjarak 5 candle. Kini minimal 8.
+- **Garis leher head and shoulders** hanya dibatasi selisih kedua lembahnya, sehingga dua lembah yang berdekatan menghasilkan garis leher curam yang "ditembus" harga hanya karena bergerak mendatar. Kini kemiringan diukur sepanjang lebar pola, dan kedua bahu harus tetap jelas di sisi yang benar dari garis leher, termasuk saat garis itu ditembus.
+
+Akibatnya di data harian: deteksi cup and handle turun dari 19 / 246 / 969 menjadi 1 / 57 / 195 (ketat / sedang / longgar), ascending/descending triangle dari 66 / 411 / 4.104 menjadi 19 / 182 / 1.585, rectangle dari 166 / 727 / 6.097 menjadi 25 / 156 / 816, head and shoulders dari 96 / 534 / 1.969 menjadi 73 / 416 / 1.609. Semua uji pola chart dan strategi kursus yang memakainya diulang, dan koreksi uji berganda dihitung ulang untuk semua uji. Perubahan hanya ke arah bentuk yang lebih rapi; tidak ada ambang yang dipilih dengan melihat hasil performanya.
+
+Hasil sesudahnya: yang lolos berubah dari 23 menjadi 22. Dua strategi crypto 4 jam yang bukan pola (`sma_20_50_lo`, `trendline_break`) tidak lagi lolos karena ambang koreksi uji berganda untuk 2022–2026 bergeser saat jumlah uji berubah; keduanya memang berada tepat di ambang. Satu strategi baru lolos, dan ini satu-satunya di luar crypto: `rectangle_longgar_mm` di data 1 jam saham Indonesia (288 transaksi dalam sekitar 3 tahun, untung di 21 dari 34 saham). Karena ia muncul dari definisi yang diubah setelah hasil terbit, dari data yang hanya mencakup satu era, dan dari sekitar 1.300 kombinasi di luar crypto, ia dilaporkan apa adanya tetapi belum bisa dianggap temuan yang kokoh.
 
 Yang diketahui tetapi tidak diubah: transaksi yang harga pembukaannya sudah melewati SL atau TP dilewati (itu bisa diketahui saat entry), sedangkan pembanding acak tidak punya saringan serupa; dan limit order tidak pernah mengambil TP di candle pengisiannya, yang merugikan strategi.
 

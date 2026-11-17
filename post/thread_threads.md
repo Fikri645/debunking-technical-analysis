@@ -22,7 +22,7 @@ Pasar naik, semua terlihat pintar.
 
 Syarat lolos: mengalahkan entry acak, untung setelah biaya, dan bekerja di mayoritas instrumen, di seluruh periode dan di 2022–2026.
 
-Saham Indonesia, saham AS, forex, emas: 0 dari 1.347 kombinasi lolos.
+Saham Indonesia, saham AS, forex, emas: 1 dari 1.339 kombinasi lolos (pola rectangle di data 1 jam saham Indonesia, 288 transaksi dalam 3 tahun).
 
 Nol di semua pasar, termasuk crypto:
 • Pola candlestick: 0 dari 490
@@ -42,9 +42,9 @@ Elliott Wave: dari 20.443 sinyal, 33,7% punya hitungan gelombang lain yang sama 
 
 Lalu semuanya diadu dengan beli lalu diamkan.
 
-Saham AS: 0 dari 419 kombinasi strategi yang hasil akhirnya lebih baik. Saham Indonesia harian: 0 dari 206.
+Saham AS: 0 dari 409 kombinasi strategi yang hasil akhirnya lebih baik. Saham Indonesia harian: 0 dari 203.
 
-Catatan jujur: di forex dan data 1 jam saham Indonesia, 221 kombinasi "menang". Tapi cuma 42 yang untung; sisanya menang karena harganya turun di periode itu dan strateginya rugi lebih sedikit.
+Catatan jujur: di forex dan data 1 jam saham Indonesia, 214 kombinasi "menang". Tapi cuma 41 yang untung; sisanya menang karena harganya turun di periode itu dan strateginya rugi lebih sedikit.
 ---
 [6]
 
@@ -56,7 +56,7 @@ Saya tidak sebut nama. Yang diuji metodenya, bukan orangnya.
 ---
 [7] gambar: 05_momentum_vs_indikator.png
 
-Bagian yang jujur: ada yang lolos. Di crypto, 23 dari 915 kombinasi lolos, hampir semuanya satu jenis: ikut tren dan breakout (EMA, golden cross, Ichimoku, Donchian, tembus trendline). 13 di antaranya juga mengalahkan beli-lalu-diamkan.
+Bagian yang jujur: ada yang lolos. Di crypto, 21 dari 913 kombinasi lolos, hampir semuanya satu jenis: ikut tren dan breakout (EMA, golden cross, Ichimoku, Donchian, tembus trendline). 12 di antaranya juga mengalahkan beli-lalu-diamkan.
 
 Jadi TA terbukti? Saya buat aturan satu kalimat tanpa indikator: "kalau harga lebih tinggi dari N candle lalu, beli; kalau tidak, keluar." Hasilnya setara dengan 14 indikator tren.
 

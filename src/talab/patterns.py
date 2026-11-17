@@ -95,8 +95,8 @@ HS_ABOVE = np.array([0.30, 0.20, 0.10])     # bahu di atas garis leher
 HS_TIME = np.array([2.0, 3.0, 5.0])         # rasio lebar kiri : kanan
 TREND = np.array([0.50, 0.25, 0.00])        # tren sebelum pola
 EQ = np.array([0.10, 0.20, 0.35])           # dua/tiga puncak "sama tinggi"
-MIN_SEP = np.array([15, 10, 5])             # jarak minimum antar puncak (candle)
-FLAT = np.array([0.10, 0.15, 0.25])         # garis "datar"
+MIN_SEP = np.array([15, 10, 8])             # jarak minimum antar puncak (candle)
+FLAT = np.array([0.04, 0.07, 0.10])         # garis "datar": selisih dua sentuhan, x tinggi pola
 RISE = np.array([0.30, 0.20, 0.15])         # garis "miring"
 CONV = np.array([0.15, 0.10, 0.05])         # wedge: selisih kemiringan
 FIFTH = np.array([0.12, 0.25, 9.99])        # jarak sentuhan kelima dari garisnya
@@ -104,7 +104,11 @@ FLAG_STEEP = np.array([10, 15, 25])         # durasi maksimum tiang (candle)
 FLAG_RETR = np.array([0.38, 0.50, 0.62])    # koreksi maksimum terhadap tiang
 CUP_RIM = np.array([0.15, 0.25, 0.40])
 CUP_MINW = np.array([30, 20, 12])
-CUP_ROUND = np.array([0.25, 0.15, 0.00])
+# Kebulatan cangkir. Pembanding: bentuk V lurus menghabiskan 33% waktunya di sepertiga
+# terbawah dan 50% di bawah tengah kedalaman; bentuk U (setengah elips) 75% dan 87%.
+CUP_ROUND = np.array([0.42, 0.38, 0.35])     # bagian candle yang low-nya di sepertiga terbawah
+CUP_HALF = np.array([0.62, 0.60, 0.56])       # bagian candle yang ditutup di bawah tengah kedalaman
+CUP_HANDLE_MIN = 4                           # panjang minimum gagang (candle)
 CUP_CENTER = np.array([0.25, 0.20, 0.10])
 CUP_HANDLE = np.array([0.35, 0.50, 0.60])
 LATE = 0.5                                   # tembus sudah > 50% target: terlambat, lewati
@@ -140,13 +144,21 @@ def det_hs(p_idx, p_px, p_type, p_conf, c, hi, lo, t):
             continue
         slope = (t2 - t1) / (it2 - it1)
         width = i3 - i1
+        # garis leher tidak boleh curam: kemiringannya diukur sepanjang lebar pola, bukan hanya
+        # di antara dua lembah, dan kedua bahu harus tetap jelas di atas garis itu
+        if abs(slope) * width > HS_NECK[t] * height:
+            continue
+        if p1 - (t1 + slope * (i1 - it1)) < HS_ABOVE[t] * height:
+            continue
+        if p3 - (t2 + slope * (i3 - it2)) < HS_ABOVE[t] * height:
+            continue
         end = min(n, p_conf[k] + max(5, width // 2))
         for j in range(p_conf[k], end):
             if c[j] > p3:
                 break
             neck = t2 + slope * (j - it2)
             if c[j] < neck:
-                if neck - c[j] <= LATE * height:
+                if neck - c[j] <= LATE * height and p3 - neck >= HS_ABOVE[t] * height:
                     s_idx[k_out] = j
                     s_dir[k_out] = -1
                     s_sl[k_out] = p3
@@ -383,10 +395,13 @@ def det_cup(p_idx, p_px, p_type, p_conf, c, hi, lo, t):
         if t < 2 and t0 > p1 - 0.5 * depth:
             continue
         low_zone = 0
+        below_mid = 0
         for j in range(i1, i2 + 1):
             if lo[j] < t1 + depth / 3:
                 low_zone += 1
-        if low_zone < CUP_ROUND[t] * width:
+            if c[j] < t1 + depth / 2:
+                below_mid += 1
+        if low_zone < CUP_ROUND[t] * width or below_mid < CUP_HALF[t] * width:
             continue
         handle_lo = np.inf
         for j in range(i2 + 1, p_conf[k] + 1):
@@ -399,7 +414,7 @@ def det_cup(p_idx, p_px, p_type, p_conf, c, hi, lo, t):
             if p2 - handle_lo > CUP_HANDLE[t] * depth:
                 break
             if c[j] > p2:
-                if j - i2 >= 3 and c[j] - p2 <= LATE * depth:
+                if j - i2 >= CUP_HANDLE_MIN and c[j] - p2 <= LATE * depth:
                     s_idx[k_out] = j
                     s_dir[k_out] = 1
                     s_sl[k_out] = handle_lo

@@ -33,9 +33,9 @@ Pasar naik, semua terlihat pintar.
 
 Syarat lolos: mengalahkan entry acak, untung setelah biaya, dan bekerja di mayoritas instrumen. Di seluruh periode dan di 2022–2026.
 
-Saham Indonesia, saham AS, forex, emas: 0 dari 1.347 kombinasi lolos.
+Saham Indonesia, saham AS, forex, emas: 1 dari 1.339 kombinasi lolos.
 
-Nol.
+Satu-satunya: pola rectangle di saham Indonesia 1 jam, 288 transaksi.
 ---
 [5]
 
@@ -64,15 +64,15 @@ Ramalan yang selalu bisa dibaca dua arah itu bukan ramalan. Itu horoskop.
 
 Lalu semuanya diadu dengan beli lalu diamkan.
 
-Saham AS: 0 dari 419 kombinasi strategi yang hasil akhirnya lebih baik. Saham Indonesia harian: 0 dari 206.
+Saham AS: 0 dari 409 kombinasi strategi yang hasil akhirnya lebih baik. Saham Indonesia harian: 0 dari 203.
 
 Sibuk trading bertahun-tahun, kalah dari yang beli lalu tidur.
 ---
 [9]
 
-Catatan jujur: di forex dan data 1 jam saham Indonesia, 221 kombinasi "menang" dari beli-lalu-diamkan.
+Catatan jujur: di forex dan data 1 jam saham Indonesia, 214 kombinasi "menang" dari beli-lalu-diamkan.
 
-Tapi cuma 42 yang untung. Sisanya menang karena harganya turun di periode itu dan strateginya rugi lebih sedikit.
+Tapi cuma 41 yang untung. Sisanya menang karena harganya turun di periode itu dan strateginya rugi lebih sedikit.
 ---
 [10]
 
@@ -92,9 +92,9 @@ Saya tidak sebut nama. Yang diuji metodenya, bukan orangnya.
 
 Bagian yang jujur: ada yang lolos.
 
-Di crypto, 23 dari 915 kombinasi lolos. Hampir semuanya satu jenis: ikut tren dan breakout. EMA, golden cross, Ichimoku, Donchian, tembus trendline.
+Di crypto, 21 dari 913 kombinasi lolos. Hampir semuanya satu jenis: ikut tren dan breakout. EMA, golden cross, Ichimoku, Donchian, tembus trendline.
 
-13 di antaranya juga mengalahkan beli-lalu-diamkan.
+12 di antaranya juga mengalahkan beli-lalu-diamkan.
 
 Jadi TA terbukti? Tunggu dulu.
 ---

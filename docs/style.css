@@ -101,6 +101,13 @@ select, input[type=search] {
 .legend i { display: inline-block; width: 16px; height: 3px; vertical-align: middle; margin-right: 5px; border-radius: 2px; }
 .chart-box { position: relative; border: 1px solid var(--rule); border-radius: 4px; background: #fbfcfe; }
 #chart { display: block; width: 100%; height: 520px; touch-action: pan-y; }
+#fchart { display: block; width: 100%; height: 640px; touch-action: pan-y; cursor: grab; }
+#fchart:active { cursor: grabbing; }
+#fchart:focus-visible { outline: 2px solid var(--mark); outline-offset: 2px; }
+.field.inline { display: inline-flex; align-items: center; gap: 8px; margin: 0; }
+.field.inline select { width: auto; min-width: 12em; }
+.field.inline span { display: inline; margin: 0; }
+.full-legend { margin: 10px 0 6px; }
 .readout {
   position: absolute; top: 8px; left: 10px; font-size: .85rem; color: var(--muted); background: rgba(251, 252, 254, .9);
   padding: 2px 6px; border-radius: 3px; pointer-events: none; min-height: 1.4em;
@@ -133,6 +140,7 @@ select, input[type=search] {
   .strategy-list { max-height: 260px; }
   .stage { padding: 16px; }
   #chart { height: 420px; }
+  #fchart { height: 520px; }
   .method dl { grid-template-columns: 1fr; gap: 2px 0; }
   .method dd { margin-bottom: 14px; }
 }
