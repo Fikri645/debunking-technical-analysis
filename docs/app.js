@@ -354,6 +354,11 @@
       if (s.k === 'span') {
         ctx.fillStyle = 'rgba(106,69,217,.13)';
         ctx.fillRect(X(s.i0) - bw / 2, T - 8, (s.i1 - s.i0 + 1) * bw, pH + 16);
+      } else if (s.k === 'fill') {
+        ctx.fillStyle = 'rgba(106,69,217,.13)';
+        ctx.beginPath();
+        s.pts.forEach((p, q) => (q ? ctx.lineTo(X(p[0]), Y(p[1])) : ctx.moveTo(X(p[0]), Y(p[1]))));
+        ctx.closePath(); ctx.fill();
       } else if (s.k === 'zone') {
         ctx.fillStyle = 'rgba(106,69,217,.16)';
         ctx.fillRect(X(s.i0) - bw / 2, Y(s.hi), (lastX(s.i1) - s.i0 + 1) * bw, Y(s.lo) - Y(s.hi));
@@ -387,6 +392,7 @@
       if (s.k === 'poly' || s.k === 'dots') {
         const lead = s.lead || 0;   // ruas awal = tren sebelum pola, digambar tipis
         if (s.k === 'poly') {
+          ctx.lineWidth = s.thin ? 1.2 : 2; ctx.globalAlpha = s.thin ? 0.55 : 1;
           if (lead) {
             ctx.save(); ctx.globalAlpha = 0.45; ctx.setLineDash([4, 4]); ctx.lineWidth = 1.4; ctx.beginPath();
             for (let q = 0; q <= lead; q++) (q ? ctx.lineTo(X(s.pts[q][0]), Y(s.pts[q][1])) : ctx.moveTo(X(s.pts[q][0]), Y(s.pts[q][1])));
@@ -396,11 +402,12 @@
           for (let q = lead; q < s.pts.length; q++) (q > lead ? ctx.lineTo(X(s.pts[q][0]), Y(s.pts[q][1])) : ctx.moveTo(X(s.pts[q][0]), Y(s.pts[q][1])));
           ctx.stroke();
         }
+        ctx.lineWidth = 2; ctx.globalAlpha = 1;
         s.pts.forEach((p, q) => {
           if (s.dots !== false && q >= lead) { ctx.beginPath(); ctx.arc(X(p[0]), Y(p[1]), 3.5, 0, 6.3); ctx.fill(); }
           if (s.numbered) { ctx.textAlign = 'center'; ctx.fillText(String(q), X(p[0]), Y(p[1]) + (q % 2 ? -12 : 13)); }
           const lb = s.labels && s.labels[q];
-          if (lb) label(lb[0], X(p[0]), Y(p[1]) - lb[1] * 15, C.mark, 'center', true);
+          if (lb) tag(lb[0], X(p[0]), Y(p[1]) - lb[1] * 17);
         });
       } else if (s.k === 'zone' && s.tag) {
         label(s.tag, X(s.i0) + 4, Y(s.lo) + 12, C.mark, 'left', true);
@@ -410,7 +417,7 @@
       } else if (s.k === 'line') {
         ctx.save(); if (s.dash) ctx.setLineDash([6, 4]);
         ctx.beginPath(); ctx.moveTo(X(s.i0), Y(s.p0)); ctx.lineTo(X(s.i1), Y(s.p1)); ctx.stroke(); ctx.restore();
-        label(s.label, X(s.i0), Y(s.p0) + (s.p1 > s.p0 ? 12 : -12), C.mark, 'left');
+        if (s.label) label(s.label, X(s.i0), Y(s.p0) + (s.p1 > s.p0 ? 12 : -12), C.mark, 'left');
       } else if (s.k === 'fib') {
         ctx.beginPath(); ctx.moveTo(X(s.ia), Y(s.a)); ctx.lineTo(X(s.ib), Y(s.b)); ctx.stroke();
         for (const [r, p] of s.levels) {
@@ -430,7 +437,8 @@
       ctx.strokeStyle = C.ink; ctx.lineWidth = 2.2;
       const x = X(t.x), y = Y(t.xp);
       ctx.beginPath(); ctx.moveTo(x - 5, y - 5); ctx.lineTo(x + 5, y + 5); ctx.moveTo(x + 5, y - 5); ctx.lineTo(x - 5, y + 5); ctx.stroke();
-      label('Keluar ' + pct(t.net), x + 9, y, t.net > 0 ? C.up : C.down, 'left', true);
+      const far = x > L + pW - 110;
+      label('Keluar ' + pct(t.net), far ? x - 9 : x + 9, y, t.net > 0 ? C.up : C.down, far ? 'right' : 'left', true);
     }
     // crosshair
     if (state.hover >= 0 && state.hover < nVis) {
@@ -489,6 +497,14 @@
     const bx = align === 'left' ? x - 3 : align === 'right' ? x - w - 3 : x - w / 2 - 3;
     ctx.fillStyle = 'rgba(251,252,254,.85)'; ctx.fillRect(bx, y - 9, w + 6, 18);
     ctx.fillStyle = color; ctx.fillText(text, x, y); ctx.restore();
+  }
+  function tag(text, x, y) {   // label bagian pola, gaya kotak seperti di platform charting
+    ctx.save();
+    ctx.font = '700 12px "Atkinson Hyperlegible Next", sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    const w = ctx.measureText(text).width + 12;
+    ctx.fillStyle = C.mark; ctx.fillRect(x - w / 2, y - 10, w, 20);
+    ctx.fillStyle = '#fff'; ctx.fillText(text, x, y + 0.5); ctx.restore();
   }
   function marker(x, y, dir, text) {
     const col = dir === 1 ? C.up : C.down, s = 9;

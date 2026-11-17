@@ -31,7 +31,7 @@ SITE = ROOT / "docs" / "data"
 CELLS = [("idx", "1d"), ("us", "1d"), ("forex", "1d"), ("crypto", "1d"), ("crypto", "4h"),
          ("idx", "1h"), ("us", "1h"), ("forex", "1h"), ("crypto", "1h"), ("crypto", "15m")]
 N_TRADES = 4
-BEFORE, AFTER, MAX_AFTER = 70, 18, 220
+BEFORE, AFTER, MAX_AFTER, MAX_BEFORE = 70, 18, 220, 700
 
 GROUP_LABEL = {
     "indikator": "Indikator", "candlestick": "Pola candlestick",
@@ -383,55 +383,128 @@ def _match_points(det: pd.DataFrame, sig: int, d: int):
             if f"pi{q}" in row and row[f"pi{q}"] >= 0]
 
 
+def _cross(pa, pb, f):
+    """Titik potong ruas pa->pb dengan garis f(i); None kalau tidak berpotongan."""
+    ga, gb = pa[1] - f(pa[0]), pb[1] - f(pb[0])
+    if ga * gb >= 0:
+        return None
+    t = ga / (ga - gb)
+    i = pa[0] + t * (pb[0] - pa[0])
+    return (float(i), float(f(i)))
+
+
+def _arc(i0, p_rim0, ib, p_bot, i1, p_rim1, n=24):
+    """Lengkung U dari bibir kiri ke dasar ke bibir kanan (dua perempat elips)."""
+    out = []
+    for q in range(n + 1):
+        v = 1 - q / n
+        out.append((i0 + (ib - i0) * q / n, p_bot + (p_rim0 - p_bot) * (1 - np.sqrt(max(0.0, 1 - v * v)))))
+    for q in range(1, n + 1):
+        v = q / n
+        out.append((ib + (i1 - ib) * q / n, p_bot + (p_rim1 - p_bot) * (1 - np.sqrt(max(0.0, 1 - v * v)))))
+    return [(float(i), float(p)) for i, p in out]
+
+
 def pattern_shapes(pat: str, pts, d: int, sig: int, df: pd.DataFrame) -> list[dict]:
-    """Gambar pola seperti di buku: garis leher, dua garis tren, tiang dan bendera, cangkir dan gagang.
-    `pts` adalah titik swing yang dipakai detektor; garisnya dihitung dengan rumus detektor yang sama."""
+    """Gambar pola seperti di buku: badan pola yang diarsir sampai garis leher, dua garis tren,
+    tiang dan bendera, cangkir dan gagang. `pts` adalah titik swing yang dipakai detektor;
+    semua garis dihitung dengan rumus detektor yang sama."""
     P = [(int(i), float(p)) for i, p in pts]
     side = [1 if P[q][1] > P[q - 1 if q else 1][1] else -1 for q in range(len(P))]   # +1 puncak, -1 lembah
     lab = lambda q, text: [text, side[q]]
     h, l, c = (df[k].values.astype(float) for k in ("high", "low", "close"))
+
+    def body(neck, names, neck_label):
+        """Pola pembalikan: garis zigzag dari garis leher, lewat tiap puncak, kembali ke garis leher."""
+        last = len(names)
+        left = _cross(P[0], P[1], neck)
+        out_pts = ([left] if left else []) + P[1:last + 1] + [(float(sig), float(neck(sig)))]
+        labels = ([None] if left else []) + [lab(q, names[q - 1]) if names[q - 1] else None
+                                             for q in range(1, last + 1)] + [None]
+        i0 = out_pts[0][0]
+        return [dict(k="fill", pts=out_pts),
+                dict(k="poly", pts=out_pts, labels=labels, dots=False),
+                dict(k="line", i0=i0, p0=float(neck(i0)), i1=sig, p1=float(neck(sig)), label=neck_label, dash=True)]
+
     if pat == "head_shoulders":
         (i1, t1), (i2, t2) = P[2], P[4]
         slope = (t2 - t1) / (i2 - i1)
-        return [dict(k="poly", pts=P, lead=1,
-                     labels=[None, lab(1, "bahu kiri"), None, lab(3, "kepala"), None, lab(5, "bahu kanan")]),
-                dict(k="line", i0=i1, p0=t1, i1=sig, p1=t2 + slope * (sig - i2), label="garis leher", dash=True)]
+        return body(lambda i: t2 + slope * (i - i2), ["bahu kiri", None, "kepala", None, "bahu kanan"], "garis leher")
     if pat == "double_top_bottom":
         w = "puncak" if d == -1 else "dasar"
-        return [dict(k="poly", pts=P, lead=1, labels=[None, lab(1, f"{w} 1"), None, lab(3, f"{w} 2")]),
-                dict(k="hline", p=P[2][1], i0=P[1][0], i1=sig, label="garis leher")]
+        lvl = P[2][1]
+        return body(lambda i: lvl, [f"{w} 1", None, f"{w} 2"], "garis leher")
     if pat == "triple_top_bottom":
         w = "puncak" if d == -1 else "dasar"
         lvl = min(P[2][1], P[4][1]) if d == -1 else max(P[2][1], P[4][1])
-        return [dict(k="poly", pts=P, lead=1,
-                     labels=[None, lab(1, f"{w} 1"), None, lab(3, f"{w} 2"), None, lab(5, f"{w} 3")]),
-                dict(k="hline", p=lvl, i0=P[1][0], i1=sig, label="support" if d == -1 else "resistance")]
+        return body(lambda i: lvl, [f"{w} 1", None, f"{w} 2", None, f"{w} 3"], "support" if d == -1 else "resistance")
     if pat in ("triangle_asc_desc", "triangle_symmetrical", "rectangle", "wedge"):
         last = list(range(len(P) - 4, len(P)))
-        out = [dict(k="dots", pts=P)]
-        for s, text in ((1, "garis atas"), (-1, "garis bawah")):
-            (ia, pa), (ib, pb) = [P[q] for q in last if side[q] == s]
+        i0 = P[0][0]
+        lines = {}
+        for sd, text in ((1, "garis atas"), (-1, "garis bawah")):
+            (ia, pa), (ib, pb) = [P[q] for q in last if side[q] == sd]
             slope = (pb - pa) / (ib - ia)
-            i0 = P[0][0]
-            out.append(dict(k="line", i0=i0, p0=pb + slope * (i0 - ib), i1=sig, p1=pb + slope * (sig - ib), label=text))
-        return out
+            lines[sd] = dict(k="line", i0=i0, p0=pb + slope * (i0 - ib), i1=sig, p1=pb + slope * (sig - ib), label=text)
+        u, lo = lines[1], lines[-1]
+        return [dict(k="fill", pts=[(i0, u["p0"]), (sig, u["p1"]), (sig, lo["p1"]), (i0, lo["p0"])]),
+                u, lo, dict(k="dots", pts=P)]
     if pat == "flag_pennant":
         (ia, a), (ib, b) = P[0], P[1]
-        ext = l[ib + 1: sig + 1].min() if d == 1 else h[ib + 1: sig + 1].max()
-        return [dict(k="line", i0=ia, p0=a, i1=ib, p1=b, label="tiang"),
-                dict(k="zone", i0=ib, i1=sig, lo=min(ext, b), hi=max(ext, b), tag="bendera")]
+        # bendera = candle setelah ujung tiang sampai sebelum candle tembus
+        x = np.arange(ib + 1, sig) if sig - ib - 1 >= 2 else np.arange(ib, sig + 1)
+        m = float(np.polyfit(x, c[x], 1)[0]) if len(x) > 3 else 0.0
+        up = float((h[x] - m * x).max())
+        dn = float((l[x] - m * x).min())
+        f_up, f_dn = (lambda i: up + m * i), (lambda i: dn + m * i)
+        return [dict(k="fill", pts=[(ib, f_up(ib)), (sig, f_up(sig)), (sig, f_dn(sig)), (ib, f_dn(ib))]),
+                dict(k="line", i0=ia, p0=a, i1=ib, p1=b, label="tiang"),
+                dict(k="line", i0=ib, p0=f_up(ib), i1=sig, p1=f_up(sig), label="bendera" if d == -1 else ""),
+                dict(k="line", i0=ib, p0=f_dn(ib), i1=sig, p1=f_dn(sig), label="bendera" if d == 1 else "")]
     if pat == "cup_handle":
         (i1, p1), (it1, t1), (i2, p2) = P[1], P[2], P[3]
-        w = max(2, (i2 - i1) // 8)
-        step = max(1, (i2 - i1) // 50)
-        curve = [(i1, p1)] + [(j, float(c[max(i1, j - w): min(i2, j + w) + 1].mean()))
-                              for j in range(i1 + step, i2, step)] + [(i2, p2)]
-        ext = l[i2 + 1: sig + 1].min() if d == 1 else h[i2 + 1: sig + 1].max()
-        return [dict(k="poly", pts=curve, dots=False),
-                dict(k="dots", pts=[P[2]], labels=[["dasar cangkir", side[2]]]),
-                dict(k="hline", p=p2, i0=i1, i1=sig, label="bibir cangkir"),
-                dict(k="zone", i0=i2, i1=sig, lo=min(ext, p2), hi=max(ext, p2), tag="gagang")]
+        seg = l[i2 + 1: sig + 1] if d == 1 else h[i2 + 1: sig + 1]
+        j = i2 + 1 + int(seg.argmin() if d == 1 else seg.argmax())
+        ext = float(seg.min() if d == 1 else seg.max())
+        cup = _arc(i1, p1, it1, t1, i2, p2)
+        handle = _arc(i2, p2, j, ext, sig, p2, n=10)
+        mid = len(cup) // 2
+        return [dict(k="poly", pts=cup, dots=False, labels=[["cangkir", -d] if q == mid else None for q in range(len(cup))]),
+                dict(k="poly", pts=handle, dots=False,
+                     labels=[["gagang", -d] if q == len(handle) // 2 else None for q in range(len(handle))]),
+                dict(k="hline", p=p2, i0=i1, i1=sig, label="bibir cangkir")]
     return [dict(k="poly", pts=P)]
+
+
+def lmw_shapes(c: np.ndarray, i: int, window: int = 35, lag: int = 3) -> list[dict]:
+    """Titik ekstrem yang dipakai definisi Lo, Mamaysky & Wang pada jendela yang berakhir di candle i
+    (langkahnya sama dengan patterns.lmw)."""
+    w = window + lag
+    y = c[i - w + 1: i + 1].astype(float)
+    sm = np.empty(w)
+    patterns._nw(y, 0.3 * patterns._cv_bandwidth(y), sm)
+    ext = []      # [posisi, harga, tipe]
+    for x in range(1, w - 1):
+        typ = 1 if (sm[x] > sm[x - 1] and sm[x] >= sm[x + 1]) else -1 if (sm[x] < sm[x - 1] and sm[x] <= sm[x + 1]) else 0
+        if typ == 0:
+            continue
+        best = x
+        for q in (x - 1, x + 1):
+            if typ * y[q] > typ * y[best]:
+                best = q
+        if ext and ext[-1][2] == typ:
+            if typ * y[best] > typ * ext[-1][1]:
+                ext[-1] = [best, y[best], typ]
+            continue
+        ext.append([best, y[best], typ])
+    base = i - w + 1
+    curve = dict(k="poly", pts=[(base + x, float(sm[x])) for x in range(w)], dots=False, thin=True)
+    if len(ext) < 5:
+        return [dict(k="span", i0=base, i1=i, label="jendela 38 candle")]
+    last5 = ext[-5:]
+    pts = [(base + e[0], float(e[1])) for e in last5]
+    labels = [[f"E{q + 1}", e[2]] for q, e in enumerate(last5)]
+    return [curve, dict(k="poly", pts=pts, labels=labels)]
 
 
 def _zone(res, entry: int, d: int, label: str):
@@ -454,8 +527,14 @@ def geometry(name: str, base: str, group: str, df: pd.DataFrame, tr) -> list[dic
         if len(hit) == 0:
             return []
         k = hit[0]
-        return [dict(k="span", i0=int(start[k]), i1=sig, label="lengkungan"),
-                dict(k="hline", p=float(rim[k]), i0=int(start[k]), i1=sig, label="bibir lengkungan")]
+        i0 = int(start[k])
+        seg = l[i0: sig + 1] if d == 1 else h[i0: sig + 1]
+        j = i0 + int(seg.argmin() if d == 1 else seg.argmax())
+        j = min(max(j, i0 + 1), sig - 1)
+        arc = _arc(i0, float(rim[k]), j, float(seg.min() if d == 1 else seg.max()), sig, float(rim[k]))
+        return [dict(k="poly", pts=arc, dots=False,
+                     labels=[["lengkungan", -d] if q == len(arc) // 2 else None for q in range(len(arc))]),
+                dict(k="hline", p=float(rim[k]), i0=i0, i1=sig, label="bibir lengkungan")]
     if base in ("channel_bounce", "channel_break"):
         idx, dirs, _, _, geo = strat_extra.channel_raw(df, 0 if base == "channel_bounce" else 1)
         hit = np.flatnonzero((idx == sig) & (dirs == d))
@@ -550,7 +629,7 @@ def geometry(name: str, base: str, group: str, df: pd.DataFrame, tr) -> list[dic
         n = CANDLE_LEN.get(base, 1)
         return [dict(k="span", i0=sig - n + 1, i1=sig, label="pola")]
     if group == "pola_chart_A":
-        return [dict(k="span", i0=sig - 37, i1=sig, label="jendela 38 candle")]
+        return lmw_shapes(c, sig)
     if base == "kontrol_swing_break":
         for mult in patterns.SCALES:
             p_idx, p_px, p_type, p_conf = strat_patterns._zz(df, mult)
@@ -568,11 +647,19 @@ def geometry(name: str, base: str, group: str, df: pd.DataFrame, tr) -> list[dic
 
 def shift_shape(s: dict, a: int, n: int) -> dict:
     s = dict(s)
+    if s.get("k") == "line" and s["i0"] < a < s["i1"]:      # garis dimulai di luar jendela: potong di tepi
+        s["p0"] = s["p0"] + (s["p1"] - s["p0"]) * (a - s["i0"]) / (s["i1"] - s["i0"])
+        s["i0"] = a
+    if s.get("numbered") and min(i for i, _ in s["pts"]) < a:
+        s["pts"], s["numbered"] = [], False
     for key in ("i0", "i1", "ia", "ib"):
         if key in s:
             s[key] = int(np.clip(s[key] - a, 0, n - 1))
     if "pts" in s:
-        s["pts"] = [[int(i - a), r6(p)] for i, p in s["pts"]]
+        keep = [q for q, (i, _) in enumerate(s["pts"]) if i >= a]      # titik di luar jendela chart dibuang
+        if s.get("labels"):
+            s["labels"] = [s["labels"][q] for q in keep]
+        s["pts"] = [[round(float(s["pts"][q][0]) - a, 2), r6(s["pts"][q][1])] for q in keep]
     for key in ("p", "p0", "p1", "lo", "hi", "a", "b"):
         if key in s:
             s[key] = r6(s[key])
@@ -587,8 +674,8 @@ def pack_trade(name, base, group, market, sym, df, tr) -> dict:
     first = entry
     for s in shapes:
         first = min([first] + [s[k] for k in ("i0", "ia") if k in s] + [p[0] for p in s.get("pts", [])])
-    a = max(0, min(entry - BEFORE, first - 12))
-    a = max(a, entry - 320)
+    a = int(max(0, min(entry - BEFORE, np.floor(first) - 12)))
+    a = max(a, entry - MAX_BEFORE)
     b = min(len(df), min(exit_, entry + MAX_AFTER) + AFTER + 1)
     n = b - a
     t = (engine.ts_ns(df.index[a:b]) // 60_000_000_000).tolist()
@@ -598,7 +685,8 @@ def pack_trade(name, base, group, market, sym, df, tr) -> dict:
                e=entry - a, x=(exit_ - a) if exit_ < b else None, dir=int(tr.dir),
                ep=r6(tr.ep), xp=r6(tr.xp), sl=r6(tr.sl), tp=r6(tr.tp), net=round(float(tr.net) * 100, 2),
                bars=exit_ - entry, limit=bool(tr.limit),
-               shapes=[shift_shape(s, a, n) for s in shapes if not s.get("pts") or min(p[0] for p in s["pts"]) >= a],
+               shapes=[x for x in (shift_shape(s, a, n) for s in shapes) if "pts" not in x or len(x["pts"]) >= 2
+                       or x["k"] == "dots"],
                ov=overlays(base, df, a, b))
     return out
 
